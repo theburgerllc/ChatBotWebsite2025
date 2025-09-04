@@ -1,0 +1,8 @@
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="16" fill="#0088ff"/>
+  <circle cx="64" cy="64" r="40" fill="white" opacity="0.95"/>
+  <circle cx="52" cy="56" r="6" fill="#0088ff"/>
+  <circle cx="76" cy="56" r="6" fill="#0088ff"/>
+  <path d="M 48 76 Q 64 88 80 76" stroke="#0088ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <text x="64" y="110" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">AI Agent</text>
+</svg>

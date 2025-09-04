@@ -1,0 +1,138 @@
+{
+  "legal": {
+    "attorney": {
+      "alpha": {
+        "heading": "Convert More Legal Leads with an AI Intake Specialist",
+        "subheading": "A face-to-face video agent that qualifies leads 24/7.",
+        "primaryCTA": { "label": "Start for $12.50", "href": "/pricing" },
+        "secondaryCTA": { "label": "See Legal Demo", "href": "/demos/legal" },
+        "logos": ["lawco.png", "firmprime.png", "lexai.png"],
+        "demoBlurb": "Meet Lex, your AI intake paralegal.",
+        "preContext": "legal-intake",
+        "featuresTitle": "Why Law Firms Choose Us",
+        "features": [
+          "Automated intake interviews that never miss a detail",
+          "Instant answers to common legal FAQs",
+          "Intelligent lead qualification and routing",
+          "Secure, compliant data handling"
+        ],
+        "faqs": [
+          { 
+            "q": "Does it give legal advice?", 
+            "a": "No. It collects information, answers FAQs, and routes qualified leads to your team. All legal advice comes from licensed attorneys." 
+          },
+          { 
+            "q": "How is client data handled?", 
+            "a": "All data is encrypted at rest and in transit. Configure custom guardrails and retention policies to meet your compliance needs." 
+          },
+          {
+            "q": "Can it integrate with our case management system?",
+            "a": "Yes, we offer API integrations with major legal software platforms."
+          }
+        ],
+        "metaTitle": "Legal AI Assistant – 24/7 Intake via Conversational Video"
+      }
+    }
+  },
+  "ecommerce": {
+    "shopper": {
+      "alpha": {
+        "heading": "Boost Store Conversions with a Video Shopping Assistant",
+        "subheading": "Guide customers, answer questions, and upsell in real-time.",
+        "primaryCTA": { "label": "Try Starter ($174)", "href": "/pricing" },
+        "secondaryCTA": { "label": "E-commerce Demo", "href": "/demos/ecommerce" },
+        "logos": ["shop360.png", "nova-retail.png", "cartgenius.png"],
+        "demoBlurb": "Ask about products, shipping, or recommendations.",
+        "preContext": "product-qa",
+        "featuresTitle": "Built for E-commerce Success",
+        "features": [
+          "Answer product questions instantly",
+          "Recommend bundles and upsells",
+          "Rescue abandoned carts",
+          "Multi-language customer support"
+        ],
+        "faqs": [
+          { 
+            "q": "How does it know our products?", 
+            "a": "Connect your product feed, catalog, or knowledge base. The AI learns your inventory and updates automatically." 
+          },
+          { 
+            "q": "Does it support multiple languages?", 
+            "a": "Yes, it can converse naturally in 30+ languages with automatic detection and translation." 
+          },
+          {
+            "q": "Can it process orders?",
+            "a": "It can guide customers through checkout and answer questions, but final order processing happens through your existing system."
+          }
+        ],
+        "metaTitle": "E-commerce AI Video Agent – Boost Sales with Personal Shopping Assistant"
+      }
+    }
+  },
+  "healthcare": {
+    "patient": {
+      "alpha": {
+        "heading": "Enhance Patient Engagement with an AI Healthcare Concierge",
+        "subheading": "Answer questions, collect intake, and triage needs 24/7.",
+        "primaryCTA": { "label": "Start for $12.50", "href": "/pricing" },
+        "secondaryCTA": { "label": "Healthcare Demo", "href": "/demos/healthcare" },
+        "logos": ["medassist.png", "healthhub.png", "careplus.png"],
+        "demoBlurb": "Ask about appointments, insurance, or symptoms.",
+        "preContext": "health-intake",
+        "featuresTitle": "Designed for Healthcare",
+        "features": [
+          "Triage patient inquiries without staff",
+          "Collect symptoms and medical history",
+          "Schedule appointments and send reminders",
+          "Multi-language support for diverse populations"
+        ],
+        "faqs": [
+          { 
+            "q": "Is it HIPAA compliant?", 
+            "a": "Enable our HIPAA Mode add-on for enhanced privacy controls, audit logs, and compliance features required for healthcare." 
+          },
+          { 
+            "q": "Can it book appointments?", 
+            "a": "Yes, integrate with your scheduling system via API to enable direct appointment booking." 
+          },
+          {
+            "q": "Does it provide medical advice?",
+            "a": "No, it collects information and helps with triage. All medical advice comes from licensed healthcare providers."
+          }
+        ],
+        "metaTitle": "Healthcare AI Assistant – Patient Intake & Support via Video"
+      }
+    }
+  },
+  "general": {
+    "visitor": {
+      "alpha": {
+        "heading": "Engage Every Visitor with AI Video Conversations",
+        "subheading": "Turn browsers into buyers with personalized video interactions.",
+        "primaryCTA": { "label": "Get Started", "href": "/pricing" },
+        "secondaryCTA": { "label": "Watch Demo", "href": "/demos" },
+        "logos": [],
+        "demoBlurb": "Experience the future of customer engagement.",
+        "preContext": "general",
+        "featuresTitle": "Why Choose AI Video Agents",
+        "features": [
+          "Increase conversion rates by 40%+",
+          "Reduce support costs by 60%",
+          "Available 24/7 in 30+ languages",
+          "Deploy in minutes with our widget"
+        ],
+        "faqs": [
+          {
+            "q": "How quickly can I get started?",
+            "a": "Deploy our widget in under 5 minutes. Just copy and paste a code snippet to your site."
+          },
+          {
+            "q": "What if I need custom features?",
+            "a": "Contact us for enterprise plans with custom personas, workflows, and integrations."
+          }
+        ],
+        "metaTitle": "AI Video Agent Solutions – Conversational AI for Every Business"
+      }
+    }
+  }
+}

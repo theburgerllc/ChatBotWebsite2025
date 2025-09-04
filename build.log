@@ -1,0 +1,53 @@
+
+> ai-video-agent-solutions@1.1.0 build
+> next build
+
+  ▲ Next.js 14.2.5
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/18) ...
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+   Generating static pages (4/18) 
+   Generating static pages (8/18) 
+   Generating static pages (13/18) 
+ ✓ Generating static pages (18/18)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    37.3 kB         144 kB
+├ ○ /_not-found                          871 B          87.9 kB
+├ ○ /about                               292 B          92.4 kB
+├ ○ /admin/events                        1.85 kB        88.9 kB
+├ ƒ /api/admin/events                    0 B                0 B
+├ ƒ /api/contact                         0 B                0 B
+├ ƒ /api/stripe/checkout                 0 B                0 B
+├ ƒ /api/tavus/create-conversation       0 B                0 B
+├ ƒ /api/tavus/webhook                   0 B                0 B
+├ ○ /contact                             2.37 kB        89.4 kB
+├ ○ /demos                               172 B            94 kB
+├ ○ /demos/ecommerce                     2.52 kB        89.6 kB
+├ ○ /demos/healthcare                    2.52 kB        89.6 kB
+├ ○ /demos/legal                         2.52 kB        89.6 kB
+├ ○ /pricing                             141 B          87.2 kB
+└ ○ /test                                141 B          87.2 kB
++ First Load JS shared by all            87.1 kB
+  ├ chunks/23-564dff0a59655339.js        31.5 kB
+  ├ chunks/fd9d1056-4a917af64af6b262.js  53.6 kB
+  └ other shared chunks (total)          1.89 kB
+
+
+ƒ Middleware                             27.2 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,42 @@
+{
+  "functions": {
+    "app/api/tavus/create-conversation/route.ts": { 
+      "maxDuration": 10
+    },
+    "app/api/tavus/webhook/route.ts": { 
+      "maxDuration": 10
+    },
+    "app/api/stripe/checkout/route.ts": { 
+      "maxDuration": 10
+    },
+    "app/api/stripe/webhook/route.ts": {
+      "maxDuration": 10
+    },
+    "app/api/contact/route.ts": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; frame-src 'self' https://tavus.daily.co https://checkout.stripe.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com; connect-src 'self' https://tavusapi.com https://app.posthog.com https://api.stripe.com; style-src 'self' 'unsafe-inline';"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}
