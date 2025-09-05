@@ -13,16 +13,16 @@ export default function SiteFooter() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Image 
-                src="/brand/mascot.png" 
-                alt="Mascot" 
-                width={32} 
-                height={32}
+                src="/brand/ai-chatbot-logo.png" 
+                alt="AI Chatbot Solutions" 
+                width={48} 
+                height={48}
                 className="rounded-lg"
               />
-              <span className="font-bold">AI Video Agent</span>
+              <span className="font-bold">AI Chatbot Solutions</span>
             </div>
             <p className="text-sm text-gray-400">
-              Conversational video AI for legal, e-commerce, and healthcare teams.
+              Conversational AI agents for legal, e-commerce, and healthcare teams.
             </p>
           </div>
           
@@ -69,7 +69,7 @@ export default function SiteFooter() {
         
         <div className="mt-10 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-sm text-gray-400">
-            © {currentYear} AI Video Agent Solutions. All rights reserved.
+            © {currentYear} AI Chatbot Solutions. All rights reserved.
           </div>
           
           <div className="flex items-center gap-4">

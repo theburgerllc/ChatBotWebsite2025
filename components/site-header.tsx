@@ -34,14 +34,14 @@ export default function SiteHeader() {
         <div className="container flex items-center justify-between py-3">
           <Link href="/" className="flex items-center gap-2">
             <Image 
-              src="/brand/mascot.png" 
-              alt="AI Video Agent" 
-              width={32} 
-              height={32}
+              src="/brand/ai-chatbot-logo.png" 
+              alt="AI Chatbot Solutions" 
+              width={48} 
+              height={48}
               className="rounded-lg"
             />
             <span className="font-bold tracking-tight text-lg">
-              AI <span className="text-primary">Video</span> Agent
+              AI <span className="text-primary">Chatbot</span> Solutions
             </span>
           </Link>
           

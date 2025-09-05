@@ -1,0 +1,14 @@
+# AI Chatbot Solutions Logo
+The new logo image should be saved as:
+- ai-chatbot-logo.png (main logo file)
+- ai-chatbot-logo.svg (optional vector version)
+
+The image features:
+- Blue robot character with green eyes
+- Text "AI CHATBOT SOLUTIONS" 
+- Cloudy sky background
+- Friendly, approachable design
+
+To add the image:
+1. Save the image file as public/brand/ai-chatbot-logo.png
+2. The components have been updated to reference this new logo

@@ -5,13 +5,13 @@ import SiteFooter from "@/components/site-footer";
 import VideoChatWidget from "@/components/VideoChatWidget";
 
 export const metadata: Metadata = {
-  title: "AI Video Agent Solutions - Conversational AI for Business",
-  description: "24/7 AI video agents for legal intake, e-commerce support, and healthcare triage. Convert more leads with personalized video conversations.",
-  keywords: "AI video agent, conversational AI, legal intake, e-commerce chatbot, healthcare AI",
+  title: "AI Chatbot Solutions - Intelligent Conversational AI for Business",
+  description: "24/7 AI chatbot solutions for legal intake, e-commerce support, and healthcare triage. Convert more leads with intelligent conversational AI.",
+  keywords: "AI chatbot, conversational AI, legal intake, e-commerce chatbot, healthcare AI, chatbot solutions",
   openGraph: {
-    title: "AI Video Agent Solutions",
-    description: "Convert more leads with 24/7 AI video agents",
-    images: ["/og-image.png"]
+    title: "AI Chatbot Solutions",
+    description: "Convert more leads with 24/7 AI chatbot solutions",
+    images: ["/brand/ai-chatbot-logo.png"]
   }
 };
 

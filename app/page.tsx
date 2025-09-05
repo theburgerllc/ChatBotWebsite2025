@@ -14,10 +14,10 @@ export default function HomePage() {
           <FadeIn>
             <div>
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Meet Your AI Video Agent
+                Meet Your AI Chatbot Assistant
               </h1>
               <p className="mt-6 text-xl text-gray-300">
-                Engage visitors with face-to-face AI conversations. 
+                Engage visitors with intelligent AI conversations. 
                 Qualify leads, answer questions, and convert more—24/7.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
@@ -37,11 +37,11 @@ export default function HomePage() {
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-3xl"></div>
               <Image 
-                src="/brand/mascot.png" 
-                alt="AI Video Agent" 
+                src="/brand/ai-chatbot-logo.png" 
+                alt="AI Chatbot Solutions" 
                 width={500} 
-                height={500} 
-                className="relative mx-auto rounded-lg"
+                height={400} 
+                className="relative mx-auto rounded-lg object-contain"
                 priority
               />
             </div>
@@ -54,7 +54,7 @@ export default function HomePage() {
         <div className="container">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Why Choose AI Video Agents?
+              Why Choose AI Chatbot Solutions?
             </h2>
           </FadeIn>
           <div className="grid md:grid-cols-3 gap-8">
@@ -131,7 +131,7 @@ export default function HomePage() {
               Ready to Transform Your Customer Experience?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
-              Join hundreds of businesses using AI video agents
+              Join hundreds of businesses using AI chatbot solutions
             </p>
             <Link href="/pricing" className="btn btn-primary text-lg px-8 py-4">
               Get Started Today
