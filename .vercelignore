@@ -1,0 +1,36 @@
+# Development files
+*.log
+*.md
+.eslintrc.json
+.prettierrc
+test-next.js
+fix_all_issues.sh
+dev-output.log
+build-output.log
+build.log
+next-build-debug.log
+package-full.json
+ADD_LOGO_INSTRUCTIONS.md
+
+# Git files
+.git
+.gitignore
+
+# Editor directories
+.vscode
+.idea
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Documentation
+docs
+README.md
+
+# Optional dependencies that aren't needed for production
+node_modules/eslint
+node_modules/prettier
+node_modules/@typescript-eslint
