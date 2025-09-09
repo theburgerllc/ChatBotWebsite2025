@@ -9,27 +9,35 @@ export default function VideoChatWidget() {
   const [url, setUrl] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  
+  const [error, setError] = useState<string | null>(null);
+
   async function openChat() {
     setLoading(true);
+    setError(null);
     try {
-      const res = await fetch("/api/tavus/create-conversation", { 
-        method: "POST", 
-        headers: { "Content-Type": "application/json" }, 
-        body: JSON.stringify({ vertical: "general" }) 
+      const res = await fetch("/api/tavus/create-conversation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vertical: "general" })
       });
-      
+      if (!res.ok) {
+        const message = await res.text();
+        setError(message || "Failed to create conversation");
+        return;
+      }
+
       const data = await res.json();
-      if (data.conversationUrl) { 
-        setUrl(data.conversationUrl); 
-        setConversationId(data.conversationId); 
-        setOpen(true); 
-        track("Widget_Opened", { 
-          conversationId: data.conversationId 
-        }); 
+      if (data.conversationUrl) {
+        setUrl(data.conversationUrl);
+        setConversationId(data.conversationId);
+        setOpen(true);
+        track("Widget_Opened", {
+          conversationId: data.conversationId
+        });
       }
     } catch (error) {
       console.error("Failed to open chat:", error);
+      setError(error instanceof Error ? error.message : "Failed to open chat");
     } finally {
       setLoading(false);
     }
@@ -43,9 +51,9 @@ export default function VideoChatWidget() {
   return (
     <>
       {!open && (
-        <button 
+        <button
           onClick={openChat}
-          disabled={loading}
+          disabled={loading || !!error}
           className="fixed bottom-6 right-6 rounded-full w-14 h-14 bg-primary text-white shadow-lg hover:scale-110 transition-transform flex items-center justify-center animate-pulse-glow"
           aria-label="Open video chat"
         >
@@ -56,7 +64,19 @@ export default function VideoChatWidget() {
           )}
         </button>
       )}
-      
+
+      {error && !open && (
+        <div className="fixed bottom-24 right-6 bg-red-500 text-white p-4 rounded-lg shadow-lg space-y-2">
+          <p className="text-sm">{error}</p>
+          <button
+            onClick={openChat}
+            className="bg-white/20 hover:bg-white/30 transition-colors px-3 py-1 rounded text-sm"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       {open && url && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="relative w-full max-w-3xl h-[85vh] bg-black border border-white/10 rounded-xl overflow-hidden shadow-2xl">
