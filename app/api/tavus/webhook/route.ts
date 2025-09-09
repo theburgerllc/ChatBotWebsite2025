@@ -5,9 +5,16 @@ async function sendNotification(subject: string, body: string) {
   const sgMail = require("@sendgrid/mail");
   const apiKey = process.env.SENDGRID_API_KEY;
   const from = process.env.SENDGRID_FROM_EMAIL;
-  const to = process.env.LEADS_NOTIFICATION_EMAIL;
+  const to = process.env.SENDGRID_TO_EMAIL; // Fixed: Using SENDGRID_TO_EMAIL to match .env.example
   
-  if (!apiKey || !from || !to) return;
+  if (!apiKey || !from || !to) {
+    console.warn("Email notification skipped: Missing configuration", {
+      hasApiKey: !!apiKey,
+      hasFrom: !!from,
+      hasTo: !!to
+    });
+    return;
+  }
   
   sgMail.setApiKey(apiKey);
   
