@@ -1,0 +1,251 @@
+#!/bin/bash
+# SDD (Spec-Driven Development) CLI Tool
+# Implements SpecKit methodology for hard-gated development
+
+set -euo pipefail
+
+COMMAND="${1:-}"
+shift || true
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Helper function for output
+log_success() { echo -e "${GREEN}✔${NC} $1"; }
+log_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_error() { echo -e "${RED}❌${NC} $1"; }
+
+case "$COMMAND" in
+    specify)
+        SPEC_INPUT="$*"
+        if [ -z "$SPEC_INPUT" ]; then
+            log_error "Usage: sdd specify 'one-line intent'"
+            exit 1
+        fi
+        
+        mkdir -p specs
+        
+        cat > specs/feature.md <<EOF
+# Feature Spec
+
+## Problem & Goals
+${SPEC_INPUT}
+
+## Primary User Story
+As a [user type]
+I want to [action/feature]
+So that [benefit/value]
+
+## Acceptance Scenarios
+
+### Happy Path
+- Given: [initial context]
+- When: [action taken]
+- Then: [expected outcome]
+
+### Error Cases
+- Given: [error context]
+- When: [error action]
+- Then: [error handling]
+
+### Edge Cases
+- Given: [edge case context]
+- When: [edge case action]
+- Then: [edge case outcome]
+
+## Non-Goals
+- [What this feature will NOT do]
+
+## Key Entities
+- [Entity 1]: [Description]
+- [Entity 2]: [Description]
+
+## Domain Glossary
+- [Term 1]: [Definition]
+- [Term 2]: [Definition]
+
+## Needs Clarification
+[Remove this section when all clarifications are resolved]
+EOF
+        
+        log_success "Spec created at specs/feature.md"
+        log_warning "Please review and complete the spec, then remove 'Needs Clarification' section"
+        ;;
+        
+    plan)
+        STACK="$*"
+        if [ -z "$STACK" ]; then
+            log_error "Usage: sdd plan 'stack & deploy info'"
+            exit 1
+        fi
+        
+        mkdir -p plan research
+        
+        cat > plan/architecture.md <<EOF
+# Architecture Plan
+
+## Stack & Runtimes
+${STACK}
+
+## Modules/Boundaries
+- Frontend Module: [Description]
+- Backend Module: [Description]
+- Data Layer: [Description]
+
+## APIs & Contracts
+### REST/GraphQL Endpoints
+- GET /api/[endpoint]: [Purpose]
+- POST /api/[endpoint]: [Purpose]
+
+### Data Contracts
+\`\`\`typescript
+interface [EntityName] {
+  // Define structure
+}
+\`\`\`
+
+## Data Model
+### Database Schema
+- Table: [name]
+  - id: [type]
+  - field: [type]
+  - relationships: [description]
+
+## Security/Performance Considerations
+### Security
+- Authentication: [Method]
+- Authorization: [Strategy]
+- Data Protection: [Approach]
+
+### Performance
+- Caching Strategy: [Description]
+- Optimization Points: [List]
+- Scalability Considerations: [Notes]
+
+## Rollout Plan
+1. Phase 1: [Description]
+2. Phase 2: [Description]
+3. Phase 3: [Description]
+EOF
+
+        cat > research/notes.md <<EOF
+# Research & Trade-offs
+
+## Technology Choices
+- Choice: [Technology]
+  - Pros: [List]
+  - Cons: [List]
+  - Alternative: [What was considered]
+
+## Design Decisions
+- Decision: [Description]
+  - Rationale: [Why this approach]
+  - Trade-offs: [What we're giving up]
+
+## References
+- [Resource 1]: [URL/Description]
+- [Resource 2]: [URL/Description]
+EOF
+        
+        log_success "Architecture plan created at plan/architecture.md"
+        log_success "Research notes template created at research/notes.md"
+        ;;
+        
+    tasks)
+        MVP_SCOPE="$*"
+        if [ -z "$MVP_SCOPE" ]; then
+            log_error "Usage: sdd tasks 'MVP outcomes'"
+            exit 1
+        fi
+        
+        mkdir -p tasks
+        
+        cat > tasks/tasks.md <<EOF
+# Tasks for MVP: ${MVP_SCOPE}
+
+## Sprint 1 Tasks
+- [ ] T1: Setup project structure and dependencies
+  - DoD: Package.json configured, all deps installed, builds successfully
+- [ ] T2: Create data models and database schema
+  - DoD: Migrations run, models tested, relationships verified
+- [ ] T3: Implement core API endpoints
+  - DoD: API tests pass, documented in OpenAPI/Swagger
+
+## Sprint 2 Tasks
+- [ ] T4: Build UI components
+  - DoD: Component tests pass, Storybook stories created
+- [ ] T5: Integrate frontend with API
+  - DoD: E2E tests pass, error handling implemented
+- [ ] T6: Add authentication/authorization
+  - DoD: Auth flow tested, permissions verified
+
+## Sprint 3 Tasks
+- [ ] T7: Performance optimization
+  - DoD: Load tests pass, Core Web Vitals met
+- [ ] T8: Security hardening
+  - DoD: Security scan clean, penetration test passed
+- [ ] T9: Documentation and deployment
+  - DoD: README complete, CI/CD pipeline working
+
+## Traceability Matrix
+| Acceptance Scenario | Tasks | Notes |
+|-------------------|-------|-------|
+| Happy Path Scenario 1 | T1, T2, T3 | Core functionality |
+| Error Case 1 | T5, T6 | Error handling |
+| Edge Case 1 | T7, T8 | Performance & Security |
+
+## Definition of Done (Global)
+- [ ] Code reviewed and approved
+- [ ] Tests written and passing
+- [ ] Documentation updated
+- [ ] No critical issues in static analysis
+- [ ] Deployed to staging environment
+EOF
+        
+        log_success "Tasks created at tasks/tasks.md"
+        log_warning "Review and customize tasks based on your specific requirements"
+        ;;
+        
+    implement)
+        TASK_IDS="$*"
+        if [ -z "$TASK_IDS" ]; then
+            log_error "Usage: sdd implement '1,2' or '1-3'"
+            exit 1
+        fi
+        
+        log_success "Starting implementation for tasks: $TASK_IDS"
+        echo "Manual implementation required. Use your IDE/editor to:"
+        echo "1. Review the task in tasks/tasks.md"
+        echo "2. Implement the functionality"
+        echo "3. Write/run tests"
+        echo "4. Update documentation"
+        echo ""
+        echo "Evidence will be captured in the next build/test run"
+        ;;
+        
+    *)
+        echo "SDD (Spec-Driven Development) CLI"
+        echo ""
+        echo "Usage: sdd <command> [arguments]"
+        echo ""
+        echo "Commands:"
+        echo "  specify <intent>    Generate a feature specification"
+        echo "  plan <stack>        Create architecture plan"
+        echo "  tasks <scope>       Generate task breakdown"
+        echo "  implement <ids>     Mark tasks for implementation"
+        echo ""
+        echo "Example:"
+        echo "  sdd specify 'Build a real-time chat application'"
+        echo "  sdd plan 'Next.js 15 + Node 22 LTS on Vercel'"
+        echo "  sdd tasks 'MVP chat with rooms and user auth'"
+        echo "  sdd implement '1,2,3'"
+        
+        if [ -n "$COMMAND" ]; then
+            log_error "Unknown command: $COMMAND"
+            exit 1
+        fi
+        ;;
+esac
