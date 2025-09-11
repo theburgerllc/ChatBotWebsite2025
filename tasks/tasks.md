@@ -1,28 +1,33 @@
-# Tasks for MVP: Production-ready AI video agent platform with Tavus CVI conversations, Stripe subscriptions, and lead capture
+# Implementation Tasks: Tavus CVI Integration
 
-## Sprint 1 Tasks
-- [ ] T1: Setup project structure and dependencies
-  - DoD: Package.json configured, all deps installed, builds successfully
-- [ ] T2: Create data models and database schema
-  - DoD: Migrations run, models tested, relationships verified
-- [ ] T3: Implement core API endpoints
-  - DoD: API tests pass, documented in OpenAPI/Swagger
+## Core Framework Upgrades (Phase 1)
+- [ ] **T1: Upgrade framework dependencies**
+  - DoD: Next.js 15.5.x, React 19.1.x, Tailwind 4.1.x installed and building
+  - Verification: `npm run build` succeeds, `npm run typecheck` passes
 
-## Sprint 2 Tasks
-- [ ] T4: Build UI components
-  - DoD: Component tests pass, Storybook stories created
-- [ ] T5: Integrate frontend with API
-  - DoD: E2E tests pass, error handling implemented
-- [ ] T6: Add authentication/authorization
-  - DoD: Auth flow tested, permissions verified
+## Tavus Integration (Phase 2)
+- [ ] **T2: Install and configure Tavus CVI package**
+  - DoD: @tavus/cvi-ui installed, types configured, bundle optimized
+- [ ] **T3: Implement CVI Provider wrapper**
+  - DoD: Global provider in app/providers/, context hooks working
+- [ ] **T4: Update environment variables**
+  - DoD: All Tavus/PostHog vars in .env.example, Vercel configured
+- [ ] **T5: Refactor components for official library**
+  - DoD: CVIDemo, VideoChatWidget, Conversation use @tavus/cvi-ui
 
-## Sprint 3 Tasks
-- [ ] T7: Performance optimization
-  - DoD: Load tests pass, Core Web Vitals met
-- [ ] T8: Security hardening
-  - DoD: Security scan clean, penetration test passed
-- [ ] T9: Documentation and deployment
-  - DoD: README complete, CI/CD pipeline working
+## API & Features (Phase 3)
+- [ ] **T6: Enhance API routes with advanced features**
+  - DoD: Memory stores, document tags, improved error handling
+- [ ] **T7: Implement webhook signature verification**
+  - DoD: HMAC verification, event persistence, all event types handled
+- [ ] **T8: Integrate PostHog analytics**
+  - DoD: Client & server tracking, standard events, user identification
+
+## Testing & Documentation (Phase 4)
+- [ ] **T9: Add Playwright E2E tests**
+  - DoD: Widget, demo, admin tests passing, CI integration
+- [ ] **T10: Update documentation**
+  - DoD: README complete, API docs, deployment guide, inline JSDoc
 
 ## Traceability Matrix
 | Acceptance Scenario | Tasks | Notes |

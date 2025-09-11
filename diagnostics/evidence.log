@@ -1,95 +1,22 @@
-== Install ==
-Dependencies already installed
-== Build ==
+== Tavus CVI Integration Evidence ==
+== Date: Thu Sep 11 17:32:17 EDT 2025 ==
 
-> ai-video-agent-solutions@1.1.0 build
-> next build
+== Dependencies ==
+├── @playwright/test@1.55.0
+├── @tavus/cvi-ui@0.0.1-beta.5
+├── posthog-js@1.264.2
+├── posthog-node@5.8.4
 
-  ▲ Next.js 14.2.5
-  - Environments: .env.local
+== Type Check ==
 
-   Creating an optimized production build ...
-Build process terminated (timeout or completed)
-== Typecheck ==
-== Tests ==
-No test script configured
-== Install ==
- ERR_PNPM_NO_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is absent
-
-Note that in CI environments this setting is true by default. If you still need to run install in such cases, use "pnpm install --no-frozen-lockfile"
-npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
-npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-
-added 441 packages, and audited 442 packages in 3m
-
-155 packages are looking for funding
-  run `npm fund` for details
-
-1 critical severity vulnerability
-
-To address all issues, run:
-  npm audit fix --force
-
-Run `npm audit` for details.
-== Build ==
-
-> ai-video-agent-solutions@1.1.0 build
-> next build
-
-  ▲ Next.js 14.2.5
-  - Environments: .env.local
-
-   Creating an optimized production build ...
- ✓ Compiled successfully
-   Skipping linting
-   Checking validity of types ...
-   Collecting page data ...
-   Generating static pages (0/18) ...
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
-   Generating static pages (4/18) 
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
-   Generating static pages (8/18) 
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
-   Generating static pages (13/18) 
- ✓ Generating static pages (18/18)
-   Finalizing page optimization ...
-   Collecting build traces ...
-
-Route (app)                              Size     First Load JS
-┌ ○ /                                    37.8 kB         144 kB
-├ ○ /_not-found                          871 B          87.9 kB
-├ ○ /about                               293 B          92.4 kB
-├ ○ /admin/events                        1.85 kB        88.9 kB
-├ ƒ /api/admin/events                    0 B                0 B
-├ ƒ /api/contact                         0 B                0 B
-├ ƒ /api/stripe/checkout                 0 B                0 B
-├ ƒ /api/tavus/create-conversation       0 B                0 B
-├ ƒ /api/tavus/webhook                   0 B                0 B
-├ ○ /contact                             2.37 kB        89.4 kB
-├ ○ /demos                               173 B            94 kB
-├ ○ /demos/ecommerce                     2.52 kB        89.6 kB
-├ ○ /demos/healthcare                    2.52 kB        89.6 kB
-├ ○ /demos/legal                         2.52 kB        89.6 kB
-├ ○ /pricing                             141 B          87.2 kB
-└ ○ /test                                141 B          87.2 kB
-+ First Load JS shared by all            87.1 kB
-  ├ chunks/23-564dff0a59655339.js        31.5 kB
-  ├ chunks/fd9d1056-4a917af64af6b262.js  53.6 kB
-  └ other shared chunks (total)          1.89 kB
+> ai-video-agent-solutions@1.1.0 typecheck
+> tsc --noEmit
 
 
-ƒ Middleware                             27.2 kB
-
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
-
-== Typecheck ==
-== Tests ==
+== Package Info ==
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
