@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
+import { trackServerEvent, POSTHOG_EVENTS } from "@/lib/posthog";
 
 export const runtime = "nodejs"; // ensure Node runtime, not edge
 
@@ -24,6 +25,54 @@ export async function POST(req: NextRequest) {
       topic: "video", 
       payload 
     }));
+    
+    // Track in PostHog
+    const videoId = payload.video_id || payload.videoId || 'unknown';
+    const status = payload.status || payload.state || 'unknown';
+    
+    // Track general webhook received event
+    await trackServerEvent(
+      videoId,
+      POSTHOG_EVENTS.WEBHOOK_VIDEO_RECEIVED,
+      {
+        status,
+        video_id: videoId,
+        raw_payload: payload,
+        ip: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
+        userAgent: req.headers.get('user-agent'),
+      }
+    );
+    
+    // Track specific status types
+    switch (status) {
+      case 'completed':
+      case 'complete':
+      case 'success':
+        await trackServerEvent(
+          videoId,
+          POSTHOG_EVENTS.WEBHOOK_VIDEO_COMPLETED,
+          { 
+            video_id: videoId,
+            video_url: payload.video_url || payload.url,
+            duration: payload.duration,
+            ...payload 
+          }
+        );
+        break;
+      case 'error':
+      case 'failed':
+        await trackServerEvent(
+          videoId,
+          POSTHOG_EVENTS.WEBHOOK_VIDEO_ERROR,
+          { 
+            video_id: videoId,
+            error: payload.error || payload.message,
+            error_code: payload.error_code,
+            ...payload 
+          }
+        );
+        break;
+    }
     
     // TODO: Add signature verification when Tavus documents the header format
     // const signature = req.headers.get('x-tavus-signature');

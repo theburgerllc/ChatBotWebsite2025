@@ -119,6 +119,17 @@ export const POSTHOG_EVENTS = {
   // Admin events
   ADMIN_LOGIN: 'Admin Login',
   ADMIN_EVENT_VIEWED: 'Admin Event Viewed',
+  
+  // Webhook events
+  WEBHOOK_CONVERSATION_RECEIVED: 'Webhook Conversation Received',
+  WEBHOOK_VIDEO_RECEIVED: 'Webhook Video Received',
+  WEBHOOK_CONVERSATION_JOINED: 'Webhook Conversation Joined',
+  WEBHOOK_CONVERSATION_LEFT: 'Webhook Conversation Left',
+  WEBHOOK_CONVERSATION_TRANSCRIPT_READY: 'Webhook Transcript Ready',
+  WEBHOOK_CONVERSATION_RECORDING_READY: 'Webhook Recording Ready',
+  WEBHOOK_CONVERSATION_SUMMARY_READY: 'Webhook Summary Ready',
+  WEBHOOK_VIDEO_COMPLETED: 'Webhook Video Completed',
+  WEBHOOK_VIDEO_ERROR: 'Webhook Video Error',
 } as const;
 
 export type PostHogEventName = typeof POSTHOG_EVENTS[keyof typeof POSTHOG_EVENTS];
