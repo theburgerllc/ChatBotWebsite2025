@@ -121,8 +121,10 @@ export async function POST(req: NextRequest) {
       body.memory_stores = uniqueMemoryStores;
     }
     
-    // Set webhook callback
-    body.callback_url = `${BASE_URL}/api/tavus/webhook`;
+    // Set webhook callback URL for conversation events
+    // Using the new dedicated conversation webhook endpoint
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || BASE_URL;
+    body.callback_url = `${baseUrl}/api/tavus/webhook/conversation`;
 
     // Validate API key
     const apiKey = process.env.TAVUS_API_KEY;

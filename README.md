@@ -98,14 +98,93 @@ npm start
 ## API Endpoints
 
 - `POST /api/tavus/create-conversation` - Create new CVI session
-- `POST /api/tavus/webhook` - Handle Tavus webhooks
+- `POST /api/tavus/webhook` - Handle Tavus webhooks (legacy)
+- `POST /api/tavus/webhook/conversation` - Handle conversation callbacks
+- `POST /api/tavus/webhook/video` - Handle video generation callbacks
 - `POST /api/stripe/checkout` - Create Stripe checkout session
 - `POST /api/contact` - Handle contact form submissions
-- `GET /api/admin/events` - Fetch system events (protected)
+- `GET /api/admin/webhook-events` - Fetch webhook events (protected)
+
+## Tavus Webhooks
+
+### Overview
+
+The application implements two webhook endpoints to receive Tavus callbacks:
+
+1. **Conversation Webhook** (`/api/tavus/webhook/conversation`)
+   - Receives updates when conversations join/leave, transcript ready, recording ready
+   - Automatically configured when creating conversations
+
+2. **Video Webhook** (`/api/tavus/webhook/video`)
+   - Receives notifications when video generation completes or errors
+   - Used when creating videos with the Tavus API
+
+### Setup
+
+1. Set environment variables:
+```bash
+TAVUS_WEBHOOK_BASIC_USER=admin
+TAVUS_WEBHOOK_BASIC_PASS=secure_password_here
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
+```
+
+2. Webhooks are automatically registered when creating conversations/videos
+
+### Testing Webhooks
+
+1. **Local Testing with ngrok**:
+```bash
+# Install ngrok
+npm install -g ngrok
+
+# Run local dev server
+npm run dev
+
+# In another terminal, expose localhost
+ngrok http 3000
+
+# Use the ngrok URL as NEXT_PUBLIC_BASE_URL
+```
+
+2. **Verify webhook delivery**:
+   - Create a conversation via the API
+   - Check `/admin/webhook-events` for received callbacks
+   - Events are also logged to `diagnostics/events/*.jsonl`
+
+3. **Test with curl**:
+```bash
+# Test conversation webhook
+curl -X POST http://localhost:3000/api/tavus/webhook/conversation \
+  -H "Content-Type: application/json" \
+  -d '{"event_type":"conversation.started","conversation_id":"test-123"}'
+
+# Test video webhook  
+curl -X POST http://localhost:3000/api/tavus/webhook/video \
+  -H "Content-Type: application/json" \
+  -d '{"status":"completed","video_id":"test-456"}'
+```
+
+### Webhook Event Viewer
+
+Access the webhook event viewer at `/admin/webhook-events`:
+- Protected with basic auth (uses `TAVUS_WEBHOOK_BASIC_USER/PASS`)
+- Shows all received webhook events
+- Filter by topic (conversation/video)
+- Auto-refreshes every 10 seconds
+- Expandable payload view for debugging
+
+### Event Storage
+
+Webhook events are stored as JSONL files:
+- Location: `./diagnostics/events/YYYY-MM-DD.jsonl`
+- Format: `{"ts":timestamp,"topic":"conversation|video","payload":{}}`
+- Files are created daily, one line per event
 
 ## Admin Panel
 
-Access the admin panel at `/admin/events` with basic auth credentials set in environment variables.
+Access the admin panels with basic auth credentials:
+- `/admin/webhook-events` - View Tavus webhook events
+- `/admin/events` - View system events (if implemented)
 
 ## Support
 
