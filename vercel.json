@@ -1,31 +1,22 @@
 {
-  "env": {
-    "NODE_VERSION": "20"
-  },
   "functions": {
     "app/api/tavus/create-conversation/route.ts": { 
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     },
     "app/api/tavus/webhook/route.ts": { 
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     },
     "app/api/stripe/checkout/route.ts": { 
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     },
     "app/api/stripe/webhook/route.ts": {
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     },
     "app/api/contact/route.ts": {
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     },
     "app/api/admin/events/route.ts": {
-      "maxDuration": 10,
-      "runtime": "nodejs20.x"
+      "maxDuration": 10
     }
   },
   "headers": [
