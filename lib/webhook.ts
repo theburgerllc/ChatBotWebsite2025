@@ -40,32 +40,58 @@ export function verifyWebhookSignature(
 }
 
 /**
- * Verify Tavus webhook signature
+ * Verify Tavus webhook signature with enhanced security
  * Tavus sends the signature in the 'x-tavus-signature' header
  * @param payload - Raw request body
  * @param signature - Signature from x-tavus-signature header
- * @returns Boolean indicating if signature is valid
+ * @param timestamp - Optional timestamp from webhook headers
+ * @returns Object with verification result and details
  */
 export function verifyTavusWebhook(
   payload: string,
-  signature: string | null
-): boolean {
+  signature: string | null,
+  timestamp?: string | null
+): {
+  valid: boolean;
+  reason?: string;
+  details?: any;
+} {
   const secret = process.env.TAVUS_WEBHOOK_SECRET;
-  
+
   if (!secret) {
-    console.warn('TAVUS_WEBHOOK_SECRET not configured - webhook verification disabled');
-    return true; // Allow in development if secret not set
+    if (process.env.NODE_ENV === 'production') {
+      console.error('TAVUS_WEBHOOK_SECRET not configured in production');
+      return { valid: false, reason: 'webhook_secret_not_configured' };
+    }
+    console.warn('TAVUS_WEBHOOK_SECRET not configured - webhook verification disabled in development');
+    return { valid: true, reason: 'development_mode' };
   }
 
   if (!signature) {
     console.error('No signature provided in webhook request');
-    return false;
+    return { valid: false, reason: 'missing_signature' };
+  }
+
+  // Verify timestamp to prevent replay attacks (if provided)
+  if (timestamp) {
+    const isValidTimestamp = verifyWebhookTimestamp(timestamp, 300); // 5 minutes tolerance
+    if (!isValidTimestamp) {
+      console.error('Webhook timestamp validation failed', { timestamp });
+      return { valid: false, reason: 'invalid_timestamp', details: { timestamp } };
+    }
   }
 
   // Remove any 'sha256=' prefix if present
   const cleanSignature = signature.replace(/^sha256=/, '');
-  
-  return verifyWebhookSignature(payload, cleanSignature, secret);
+
+  const isValidSignature = verifyWebhookSignature(payload, cleanSignature, secret);
+
+  if (!isValidSignature) {
+    console.error('Webhook signature verification failed');
+    return { valid: false, reason: 'invalid_signature' };
+  }
+
+  return { valid: true };
 }
 
 /**
@@ -103,10 +129,21 @@ export function verifyWebhookTimestamp(
 export enum WebhookEventType {
   CONVERSATION_STARTED = 'conversation.started',
   CONVERSATION_ENDED = 'conversation.ended',
+  CONVERSATION_JOINED = 'conversation.joined',
+  CONVERSATION_LEFT = 'conversation.left',
+  CONVERSATION_TRANSCRIPT_READY = 'conversation.transcript_ready',
+  CONVERSATION_RECORDING_READY = 'conversation.recording_ready',
+  CONVERSATION_SUMMARY_READY = 'conversation.summary_ready',
   UTTERANCE = 'utterance',
   PERCEPTION_TOOL_CALL = 'perception_tool_call',
   RECORDING_READY = 'recording.ready',
   ERROR = 'error',
+  // Legacy event types without prefix
+  JOINED = 'joined',
+  LEFT = 'left',
+  TRANSCRIPT_READY = 'transcript_ready',
+  RECORDING_READY_LEGACY = 'recording_ready',
+  SUMMARY_READY = 'summary_ready',
 }
 
 /**

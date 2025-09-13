@@ -1,6 +1,6 @@
 // Vendor-agnostic tracking (PostHog + GA4)
 import posthog from '@/lib/posthog';
-import { trackServerEvent, POSTHOG_EVENTS } from '@/lib/posthog';
+import { POSTHOG_EVENTS } from '@/lib/posthog';
 
 declare global { 
   interface Window { 
@@ -83,4 +83,4 @@ export function reset() {
 }
 
 // Re-export PostHog events for consistency
-export { POSTHOG_EVENTS, trackServerEvent };
+export { POSTHOG_EVENTS };

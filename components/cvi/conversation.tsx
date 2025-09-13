@@ -1,6 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { Maximize, Minimize, Volume2, VolumeX } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { Maximize, Minimize } from "lucide-react";
+import { Conversation as CVIConversation } from "@/app/components/cvi/components/conversation";
+import { CVIProvider } from "@/app/components/cvi/components/cvi-provider";
 
 export interface ConversationProps {
   conversationUrl: string;
@@ -13,19 +15,16 @@ export const Conversation: React.FC<ConversationProps> = ({
   onLeave,
   showControls = true
 }) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   
-  useEffect(() => {
-    return () => {
-      onLeave?.();
-    };
+  const handleLeave = useCallback(() => {
+    onLeave?.();
   }, [onLeave]);
   
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      iframeRef.current?.parentElement?.requestFullscreen();
+      const container = document.querySelector('[data-conversation-container]') as HTMLElement;
+      container?.requestFullscreen();
       setIsFullscreen(true);
     } else {
       document.exitFullscreen();
@@ -34,33 +33,28 @@ export const Conversation: React.FC<ConversationProps> = ({
   };
   
   return (
-    <div className="relative w-full h-full bg-black rounded-lg overflow-hidden">
-      <iframe 
-        ref={iframeRef}
-        src={conversationUrl} 
-        className="w-full h-full" 
-        allow="camera; microphone; autoplay; fullscreen"
-        title="AI Video Conversation"
-      />
-      
-      {showControls && (
-        <div className="absolute bottom-4 right-4 flex gap-2">
-          <button
-            onClick={() => setIsMuted(!isMuted)}
-            className="p-2 bg-black/50 backdrop-blur rounded-lg hover:bg-black/70 transition-colors"
-            aria-label={isMuted ? "Unmute" : "Mute"}
-          >
-            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          </button>
-          <button
-            onClick={toggleFullscreen}
-            className="p-2 bg-black/50 backdrop-blur rounded-lg hover:bg-black/70 transition-colors"
-            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-          >
-            {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-          </button>
-        </div>
-      )}
-    </div>
+    <CVIProvider>
+      <div 
+        className="relative w-full h-full bg-black rounded-lg overflow-hidden"
+        data-conversation-container
+      >
+        <CVIConversation 
+          conversationUrl={conversationUrl}
+          onLeave={handleLeave}
+        />
+        
+        {showControls && (
+          <div className="absolute top-4 right-4 flex gap-2 z-10">
+            <button
+              onClick={toggleFullscreen}
+              className="p-2 bg-black/50 backdrop-blur rounded-lg hover:bg-black/70 transition-colors text-white"
+              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+            </button>
+          </div>
+        )}
+      </div>
+    </CVIProvider>
   );
 };

@@ -1,9 +1,8 @@
 import posthog from 'posthog-js';
-import { PostHog } from 'posthog-node';
 
 /**
  * PostHog Analytics Integration
- * Provides both client-side and server-side tracking capabilities
+ * Provides client-side tracking capabilities only
  */
 
 // Client-side initialization
@@ -32,62 +31,6 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Server-side client (for Node.js environments)
-let posthogServer: PostHog | null = null;
-
-export function getServerPostHog(): PostHog | null {
-  if (typeof window !== 'undefined') {
-    return null; // Don't use server client on client side
-  }
-  
-  if (!posthogServer) {
-    const apiKey = process.env.POSTHOG_KEY;
-    const apiHost = process.env.POSTHOG_HOST || 'https://us.i.posthog.com';
-    
-    if (apiKey) {
-      posthogServer = new PostHog(apiKey, {
-        host: apiHost,
-        flushAt: 1, // Flush events immediately in serverless environment
-        flushInterval: 0, // Disable time-based flushing
-      });
-    }
-  }
-  
-  return posthogServer;
-}
-
-/**
- * Track server-side event
- * @param distinctId - Unique user identifier
- * @param event - Event name
- * @param properties - Event properties
- */
-export async function trackServerEvent(
-  distinctId: string,
-  event: string,
-  properties?: Record<string, any>
-) {
-  const ph = getServerPostHog();
-  if (!ph) return;
-  
-  try {
-    ph.capture({
-      distinctId,
-      event,
-      properties: {
-        ...properties,
-        $ip: properties?.ip,
-        $user_agent: properties?.userAgent,
-        source: 'server',
-      },
-    });
-    
-    // Ensure events are sent in serverless environment
-    await ph.shutdown();
-  } catch (error) {
-    console.error('PostHog server tracking error:', error);
-  }
-}
 
 // Standard event names for consistency
 export const POSTHOG_EVENTS = {

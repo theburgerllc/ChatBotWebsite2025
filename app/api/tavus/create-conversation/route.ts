@@ -37,17 +37,36 @@ export async function POST(req: NextRequest) {
       metadata = {}
     } = await req.json();
     
-    // Rate limiting
+    // Rate limiting with enhanced feedback
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || req.ip || "unknown";
-    if (!checkRateLimit(ip)) {
+    const rateLimitResult = checkRateLimit(ip, true);
+    
+    if (!rateLimitResult.allowed) {
       track(POSTHOG_EVENTS.CONVERSATION_ERROR, {
         reason: 'rate_limit',
         ip,
         requestId,
+        remaining: rateLimitResult.remaining,
+        retryAfter: rateLimitResult.retryAfter,
       });
+      
       return NextResponse.json(
-        { error: "Too Many Requests", retryAfter: 60 },
-        { status: 429 }
+        { 
+          error: "Too many requests. Please wait before trying again.",
+          retryAfter: rateLimitResult.retryAfter,
+          remaining: rateLimitResult.remaining,
+          resetTime: rateLimitResult.resetTime,
+          message: `Rate limit exceeded. Try again in ${rateLimitResult.retryAfter} seconds.`
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '5',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': Math.floor(rateLimitResult.resetTime / 1000).toString(),
+            'Retry-After': rateLimitResult.retryAfter?.toString() || '60'
+          }
+        }
       );
     }
 

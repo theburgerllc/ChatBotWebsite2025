@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logEvent } from "@/lib/events";
 import { verifyTavusWebhook, parseWebhookPayload, WebhookEventType } from "@/lib/webhook";
-import { trackServerEvent, POSTHOG_EVENTS } from "@/lib/posthog";
+import { trackServerEvent, POSTHOG_EVENTS } from "@/lib/posthog-server";
 
 /**
  * Tavus Webhook Handler

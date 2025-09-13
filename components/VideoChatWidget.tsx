@@ -1,8 +1,13 @@
 "use client";
-import { useState } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Conversation } from "@/components/cvi/conversation";
 import { track } from "@/lib/tracking";
 import { MessageCircle, X, Loader2 } from "lucide-react";
+
+// Maximum retry attempts and backoff configuration
+const MAX_RETRIES = parseInt(process.env.NEXT_PUBLIC_MAX_RETRIES || '3', 10);
+const BASE_DELAY_MS = 1000; // Start with 1 second
+const MAX_DELAY_MS = 16000; // Cap at 16 seconds
 
 export default function VideoChatWidget() {
   const [open, setOpen] = useState(false);
@@ -11,19 +16,44 @@ export default function VideoChatWidget() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [retryTimeoutId, setRetryTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  async function openChat() {
-    setLoading(true);
-    setError(null);
+  /**
+   * Calculate exponential backoff delay
+   * @param attemptNumber - Current retry attempt (0-based)
+   * @returns Delay in milliseconds
+   */
+  const calculateBackoffDelay = useCallback((attemptNumber: number): number => {
+    const delay = Math.min(BASE_DELAY_MS * Math.pow(2, attemptNumber), MAX_DELAY_MS);
+    // Add jitter to prevent thundering herd
+    const jitter = Math.random() * 0.1 * delay;
+    return Math.floor(delay + jitter);
+  }, []);
+
+  /**
+   * Attempt to create a conversation with retry logic
+   */
+  const attemptCreateConversation = useCallback(async (attempt: number = 0): Promise<void> => {
     try {
+      // Cancel any previous request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      
+      // Create new abort controller for this request
+      abortControllerRef.current = new AbortController();
+      
       const res = await fetch("/api/tavus/create-conversation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vertical: "general" })
+        body: JSON.stringify({ vertical: "general" }),
+        signal: abortControllerRef.current.signal
       });
       
       if (!res.ok) {
         let errorMessage = "Failed to start video chat";
+        let shouldRetry = false;
         
         try {
           const errorData = await res.json();
@@ -31,13 +61,19 @@ export default function VideoChatWidget() {
           // Handle specific error types with user-friendly messages
           if (res.status === 429) {
             errorMessage = "Too many requests. Please wait a moment and try again.";
+            shouldRetry = true; // Rate limit errors are retryable
           } else if (res.status === 400 && errorData.error?.includes("configuration")) {
             errorMessage = "Video chat is not properly configured. Please contact support.";
-          } else if (res.status === 500) {
+            shouldRetry = false; // Configuration errors are not retryable
+          } else if (res.status >= 500) {
             errorMessage = "Server error. Please try again later.";
+            shouldRetry = true; // Server errors are retryable
+          } else if (res.status >= 400 && res.status < 500) {
+            errorMessage = errorData.error || "Invalid request. Please try again.";
+            shouldRetry = false; // Client errors are generally not retryable
           } else if (errorData.error) {
-            // Use the error message from the API if available
             errorMessage = errorData.error;
+            shouldRetry = true; // Default to retryable for unknown errors
           }
           
           // Add details if available for debugging (but keep user message simple)
@@ -50,10 +86,27 @@ export default function VideoChatWidget() {
           if (textError) {
             errorMessage = textError;
           }
+          shouldRetry = res.status >= 500; // Only retry server errors
         }
         
+        // Retry logic for retryable errors
+        if (shouldRetry && attempt < MAX_RETRIES) {
+          const delay = calculateBackoffDelay(attempt);
+          console.log(`Retrying conversation creation in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
+          
+          const timeoutId = setTimeout(() => {
+            setRetryCount(attempt + 1);
+            attemptCreateConversation(attempt + 1);
+          }, delay);
+          
+          setRetryTimeoutId(timeoutId);
+          return;
+        }
+        
+        // Max retries reached or non-retryable error
         setError(errorMessage);
-        setRetryCount(prev => prev + 1);
+        setRetryCount(attempt);
+        setLoading(false);
         return;
       }
 
@@ -63,31 +116,107 @@ export default function VideoChatWidget() {
         setConversationId(data.conversationId);
         setOpen(true);
         setRetryCount(0); // Reset retry count on success
+        setError(null); // Clear any previous errors
         track("Widget_Opened", {
-          conversationId: data.conversationId
+          conversationId: data.conversationId,
+          retriesUsed: attempt
         });
       } else {
-        setError("Unable to start video chat. Please try again.");
+        throw new Error("Unable to start video chat. Invalid response from server.");
       }
     } catch (error) {
+      // Handle network errors and other exceptions
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log('Request was aborted');
+        return; // Don't treat aborted requests as errors
+      }
+      
       console.error("Failed to open chat:", error);
+      
+      let errorMessage = "Failed to open chat";
+      let shouldRetry = true;
       
       // Handle network errors
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        setError("Network error. Please check your connection and try again.");
+        errorMessage = "Network error. Please check your connection and try again.";
+        shouldRetry = true;
       } else {
-        setError(error instanceof Error ? error.message : "Failed to open chat");
+        errorMessage = error instanceof Error ? error.message : "Failed to open chat";
+        shouldRetry = true; // Default to retryable for unknown errors
       }
-      setRetryCount(prev => prev + 1);
+      
+      // Retry logic for retryable errors
+      if (shouldRetry && attempt < MAX_RETRIES) {
+        const delay = calculateBackoffDelay(attempt);
+        console.log(`Retrying conversation creation in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
+        
+        const timeoutId = setTimeout(() => {
+          setRetryCount(attempt + 1);
+          attemptCreateConversation(attempt + 1);
+        }, delay);
+        
+        setRetryTimeoutId(timeoutId);
+        return;
+      }
+      
+      // Max retries reached
+      setError(errorMessage);
+      setRetryCount(attempt);
     } finally {
       setLoading(false);
     }
+  }, [calculateBackoffDelay]);
+
+  async function openChat() {
+    setLoading(true);
+    setError(null);
+    setRetryCount(0);
+    
+    // Clear any existing retry timeout
+    if (retryTimeoutId) {
+      clearTimeout(retryTimeoutId);
+      setRetryTimeoutId(null);
+    }
+    
+    await attemptCreateConversation(0);
   }
   
-  const closeChat = () => {
+  const closeChat = useCallback(() => {
     setOpen(false);
+    
+    // Cancel any pending retries
+    if (retryTimeoutId) {
+      clearTimeout(retryTimeoutId);
+      setRetryTimeoutId(null);
+    }
+    
+    // Cancel any ongoing requests
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Reset state
+    setError(null);
+    setRetryCount(0);
+    setLoading(false);
+    
     track("Widget_Closed", { conversationId });
-  };
+  }, [conversationId, retryTimeoutId]);
+  
+  // Cleanup on unmount
+  const cleanup = useCallback(() => {
+    if (retryTimeoutId) {
+      clearTimeout(retryTimeoutId);
+    }
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+  }, [retryTimeoutId]);
+  
+  // Use effect for cleanup on unmount
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
   
   return (
     <>
@@ -124,9 +253,14 @@ export default function VideoChatWidget() {
               className="bg-white/20 hover:bg-white/30 disabled:opacity-50 transition-colors px-3 py-1 rounded text-sm flex items-center space-x-1"
             >
               {loading ? (
-                <><Loader2 className="animate-spin w-3 h-3" /> <span>Retrying...</span></>
+                <><Loader2 className="animate-spin w-3 h-3" /> <span>
+                  {retryCount > 0 ? `Retrying... (${retryCount}/${MAX_RETRIES})` : 'Connecting...'}
+                </span></>
               ) : (
-                <span>Try Again{retryCount > 0 && ` (${retryCount})`}</span>
+                <span>
+                  Try Again
+                  {retryCount > 0 && ` (${retryCount}/${MAX_RETRIES} attempts)`}
+                </span>
               )}
             </button>
             <button

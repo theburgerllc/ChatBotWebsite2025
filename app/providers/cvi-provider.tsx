@@ -1,12 +1,12 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode } from "react";
+import { DailyProvider } from "@daily-co/daily-react";
 
 /**
  * Tavus CVI Provider Configuration
  * This provider wraps the application and provides access to the Tavus CVI UI library
- * Since @tavus/cvi-ui is a placeholder for the actual implementation,
- * we're creating the structure that will be used once the library is available
+ * with the official Daily.co provider integration
  */
 
 interface CVIConfig {
@@ -41,6 +41,7 @@ interface CVIProviderProps {
 /**
  * CVIProvider Component
  * Provides Tavus CVI configuration to the entire application
+ * with Daily.co provider integration for video calling functionality
  * 
  * @param children - React children to wrap
  * @param config - Optional CVI configuration override
@@ -60,7 +61,13 @@ export function CVIProvider({ children, config = {} }: CVIProviderProps) {
     isInitialized: !!mergedConfig.apiKey,
   };
 
-  return <CVIContext.Provider value={value}>{children}</CVIContext.Provider>;
+  return (
+    <CVIContext.Provider value={value}>
+      <DailyProvider>
+        {children}
+      </DailyProvider>
+    </CVIContext.Provider>
+  );
 }
 
 /**
