@@ -114,36 +114,28 @@ export async function POST(req: NextRequest) {
       ...customTags
     ])];
 
-    // Build request body
+    // Build request body - simplified for Tavus API v2
     const body: any = {
       persona_id: personaId,
       replica_id: replicaId,
-      properties: { 
-        language: metadata.language || "en",
-        enable_transcription: true,
-        enable_recordings: metadata.enableRecordings !== false,
-        custom_metadata: {
-          requestId,
-          vertical,
-          userId,
-          sessionId,
-          ...metadata
-        }
-      }
     };
     
-    // Add optional fields
+    // Add optional fields that are supported by Tavus API v2
     if (allTags.length > 0) {
       body.document_tags = allTags;
     }
     if (uniqueMemoryStores.length > 0) {
       body.memory_stores = uniqueMemoryStores;
     }
-    
+
     // Set webhook callback URL for conversation events
-    // Using the new dedicated conversation webhook endpoint
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || BASE_URL;
     body.callback_url = `${baseUrl}/api/tavus/webhook/conversation`;
+
+    // Add language if provided (moved to root level)
+    if (metadata.language) {
+      body.language = metadata.language;
+    }
 
     // Validate API key
     const apiKey = process.env.TAVUS_API_KEY;
