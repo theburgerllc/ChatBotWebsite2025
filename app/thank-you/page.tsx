@@ -22,27 +22,29 @@ function ThankYouContent() {
   }, [sessionId]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black to-neutral-900 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Success Icon */}
-          <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
-            <Check className="w-10 h-10 text-white" />
+    <main className="min-h-screen">
+      <div className="section-lg">
+        <div className="container-sm text-center">
+          <div className="content-gap-lg">
+            {/* Success Icon */}
+            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+              <Check className="w-12 h-12 text-white" />
+            </div>
+
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
+              Welcome to AI Chatbot Solutions!
+            </h1>
+
+            <p className="text-xl lg:text-2xl text-muted-foreground">
+              Thank you for your subscription. Your AI chatbot is being set up and will be ready in minutes.
+            </p>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Welcome to AI Chatbot Solutions!
-          </h1>
-
-          <p className="text-xl text-gray-300 mb-8">
-            Thank you for your subscription. Your AI chatbot is being set up and will be ready in minutes.
-          </p>
-
           {/* What happens next */}
-          <div className="bg-card border rounded-xl p-8 mb-8">
-            <h2 className="text-2xl font-bold mb-6">What happens next?</h2>
+          <div className="bg-card border rounded-2xl p-10 mb-12">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-8">What happens next?</h2>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold">1</span>

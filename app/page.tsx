@@ -87,28 +87,28 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="section bg-gradient-to-b from-black to-neutral-900">
-        <div className="container">
+      <section className="section-lg bg-gradient-to-b from-black to-neutral-900">
+        <div className="container-sm">
           {/* Trust bar */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <LiveVisitorCount />
           </div>
 
           {/* Main hero content */}
-          <div className="text-center max-w-4xl mx-auto">
+          <div className="text-center content-gap-lg">
             <FadeIn>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
                 Convert <span className="text-primary">47% More Leads</span> in 30 Days
                 <br />Without Hiring More Staff
               </h1>
 
-              <p className="text-xl text-gray-300 mb-8">
+              <p className="text-xl lg:text-2xl text-muted-foreground">
                 Your AI video agent qualifies leads, books appointments, and answers questions 24/7
                 while you sleep. No training needed, starts working in 5 minutes.
               </p>
 
               {/* Dual CTA */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/demos"
                   className="btn btn-primary text-lg px-8 py-4 group"
@@ -130,7 +130,7 @@ export default function HomePage() {
               </div>
 
               {/* Urgency element */}
-              <div className="text-sm text-yellow-400 mb-8">
+              <div className="text-sm text-yellow-400">
                 ⚡ Limited Time: 50% off setup (expires in 48 hours)
               </div>
 
@@ -138,7 +138,7 @@ export default function HomePage() {
               <AnimatedStats />
 
               {/* Social proof */}
-              <div className="mt-12 pt-8 border-t border-white/10">
+              <div className="pt-8 border-t border-border">
                 <p className="text-sm text-gray-400 mb-4">Trusted by 500+ businesses</p>
                 <div className="flex justify-center items-center gap-8 opacity-50">
                   <div className="text-gray-500 font-semibold">TechFlow Inc.</div>
@@ -173,14 +173,14 @@ export default function HomePage() {
       )}
 
       {/* Features Section */}
-      <section className="section bg-black/40">
+      <section className="section">
         <div className="container">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-16">
               Why Choose AI Chatbot Solutions?
             </h2>
           </FadeIn>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             {FEATURES.map((feature, i) => {
               const Icon = feature.icon;
               return (
@@ -221,21 +221,23 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="section bg-gradient-to-b from-neutral-900 to-black">
+      <section className="section">
         <div className="container">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-16">
               Trusted by Leading Teams
             </h2>
           </FadeIn>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             {TESTIMONIALS.map((testimonial, i) => (
               <FadeIn key={i} delay={i * 0.1}>
-                <div className="bg-card text-card-foreground rounded-xl border p-6">
-                  <p className="text-muted-foreground italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
-                  <div>
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">
+                <div className="bg-card text-card-foreground rounded-2xl border p-8 h-full flex flex-col">
+                  <p className="text-muted-foreground italic mb-6 flex-1 text-lg leading-relaxed">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+                  <div className="border-t border-border pt-6">
+                    <p className="font-semibold text-lg">{testimonial.author}</p>
+                    <p className="text-sm text-muted-foreground mt-1">
                       {testimonial.role}, {testimonial.company}
                     </p>
                   </div>
@@ -248,17 +250,19 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="section bg-primary/10 border-y border-primary/20">
-        <div className="container text-center">
+        <div className="container-sm text-center">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to Transform Your Customer Experience?
-            </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Join hundreds of businesses using AI chatbot solutions
-            </p>
-            <Link href="/pricing" className="btn btn-primary text-lg px-8 py-4">
-              Get Started Today
-            </Link>
+            <div className="content-gap-lg">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+                Ready to Transform Your Customer Experience?
+              </h2>
+              <p className="text-xl lg:text-2xl text-muted-foreground">
+                Join hundreds of businesses using AI chatbot solutions
+              </p>
+              <Link href="/pricing" className="btn-primary text-lg px-8 py-4 inline-block">
+                Get Started Today
+              </Link>
+            </div>
           </FadeIn>
         </div>
       </section>

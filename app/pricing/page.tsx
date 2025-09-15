@@ -110,19 +110,21 @@ export default function PricingPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black to-neutral-900 text-white">
-      <div className="container mx-auto px-4 py-12">
-        {/* Hero section with social proof */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-sm mb-6">
-            <Users className="w-4 h-4 text-green-400" />
-            <span className="text-green-400">Trusted by <CustomerCount />+ businesses</span>
-          </div>
+    <main className="min-h-screen">
+      <div className="section-lg">
+        <div className="container">
+          {/* Hero section with social proof */}
+          <div className="text-center content-gap-lg mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-sm mb-6">
+              <Users className="w-4 h-4 text-green-400" />
+              <span className="text-green-400">Trusted by <CustomerCount />+ businesses</span>
+            </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-gray-300 mb-6">
-            Pay for what you use. No hidden fees. Cancel anytime.
-          </p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">Simple, Transparent Pricing</h1>
+            <p className="text-xl lg:text-2xl text-muted-foreground">
+              Pay for what you use. No hidden fees. Cancel anytime.
+            </p>
+          </div>
 
           {/* Urgency bar */}
           <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-lg p-4 max-w-md mx-auto mb-8">

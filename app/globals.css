@@ -111,6 +111,38 @@
     /* Warm amber banner like the screenshot */
     background: linear-gradient(180deg, #0ea5e9 0%, #0ea5e9 0%), #0ea5e9;
   }
+
+  /* Layout & Spacing */
+  .section {
+    @apply py-20 lg:py-24;
+  }
+  .section-sm {
+    @apply py-16 lg:py-20;
+  }
+  .section-lg {
+    @apply py-24 lg:py-32;
+  }
+
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .container-sm {
+    @apply mx-auto max-w-4xl px-4 sm:px-6 lg:px-8;
+  }
+  .container-xs {
+    @apply mx-auto max-w-2xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Content spacing */
+  .content-gap {
+    @apply space-y-6 lg:space-y-8;
+  }
+  .content-gap-sm {
+    @apply space-y-4 lg:space-y-6;
+  }
+  .content-gap-lg {
+    @apply space-y-8 lg:space-y-12;
+  }
 }
 
 /* Custom scrollbar */
