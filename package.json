@@ -32,24 +32,24 @@
     "jotai": "^2.14.0",
     "lucide-react": "^0.427.0",
     "nanoid": "^5.0.7",
-    "next": "14.2.5",
+    "next": "^15.1.0",
     "posthog-js": "^1.264.2",
     "posthog-node": "^5.8.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "stripe": "^16.8.0",
     "tailwind-merge": "^2.5.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@types/node": "20.14.0",
-    "@types/react": "18.2.79",
-    "@types/react-dom": "18.2.25",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.10",
-    "typescript": "5.3.3"
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.6.0"
   },
   "optionalDependencies": {
     "eslint": "^9.0.0",

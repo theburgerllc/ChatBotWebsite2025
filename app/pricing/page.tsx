@@ -1,8 +1,16 @@
-"use client";
-import { useState, useEffect } from "react";
-import { PLANS, ADDONS } from "@/config/pricing";
+'use client';
+
+import { useMemo, useState, useEffect } from 'react';
+import { plans, addOns, computeTotals, toStripeLineItems, PlanId, AddOnId } from '@/lib/pricing';
+import { Analytics } from '@/lib/analytics';
 import { Check, Star, Shield, Users, Zap, Clock } from "lucide-react";
-import { track } from "@/lib/tracking";
+
+type EstimatorState = {
+  planId: PlanId;
+  estMinutes: number;
+  addOns: Record<AddOnId, boolean>;
+  email?: string;
+};
 
 // Customer count animation
 function CustomerCount() {
@@ -51,15 +59,59 @@ function UrgencyTimer() {
   );
 }
 
-export default function PricingPage() {
+async function beginCheckout(lineItems: { price: string; quantity: number }[], email?: string) {
+  const res = await fetch('/api/stripe/checkout', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      lineItems,
+      clientRef: 'pricing_page',
+      email
+    }),
+  });
+  if (!res.ok) throw new Error('Checkout init failed');
+  const { url } = await res.json();
+  if (url) window.location.href = url;
+}
 
+export default function PricingPage() {
+  const [state, setState] = useState<EstimatorState>({
+    planId: 'starter',
+    estMinutes: 400,
+    addOns: {
+      minutes_1k: false,
+      concurrency: false,
+      replica: false,
+      hipaa: false,
+      multilingual: false,
+      ivr: false,
+      sla: false
+    },
+  });
+
+  const selectedAddOnIds = useMemo(
+    () => (Object.keys(state.addOns) as AddOnId[]).filter(k => state.addOns[k]),
+    [state.addOns]
+  );
+
+  const totals = useMemo(
+    () => computeTotals(state.planId, state.estMinutes, selectedAddOnIds),
+    [state.planId, state.estMinutes, selectedAddOnIds]
+  );
+
+  const lineItems = useMemo(
+    () => toStripeLineItems(state.planId, totals.overagePacks, selectedAddOnIds),
+    [state.planId, totals.overagePacks, selectedAddOnIds]
+  );
+
+  // Fire once on mount
   useEffect(() => {
-    track('Pricing_Page_Viewed');
+    Analytics.pricingView();
   }, []);
 
   return (
-    <main className="section">
-      <div className="container">
+    <main className="min-h-screen bg-gradient-to-b from-black to-neutral-900 text-white">
+      <div className="container mx-auto px-4 py-12">
         {/* Hero section with social proof */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-sm mb-6">
@@ -93,100 +145,190 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {PLANS.map((plan, index) => (
-            <div
-              key={plan.id}
-              className={`relative bg-black/50 border rounded-xl p-8 flex flex-col transform hover:scale-105 transition-all duration-300 ${
-                plan.popular ? 'border-primary shadow-lg shadow-primary/20 scale-105' : 'border-white/10'
-              }`}
-            >
-              {plan.popular && (
-                <>
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                    <Star className="w-4 h-4" />
-                    Most Popular
-                  </div>
-                  <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                    SAVE 45%
-                  </div>
-                </>
-              )}
-
-              {index === 0 && (
-                <div className="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded-full font-bold">
-                  STARTER
-                </div>
-              )}
-
-              {index === 2 && (
-                <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
-                  ENTERPRISE
-                </div>
-              )}
-              
-              <h2 className="text-2xl font-bold">{plan.title}</h2>
-              
-              <div className="mt-4">
-                <span className="text-4xl font-bold">${plan.priceMonthly}</span>
-                <span className="text-gray-400">/month</span>
-              </div>
-              
-              {plan.firstMonthPrice < plan.priceMonthly && (
-                <p className="text-green-400 text-sm mt-2">
-                  First month: ${plan.firstMonthPrice}
-                </p>
-              )}
-              
-              <div className="mt-6 space-y-4 flex-grow">
-                <div className="pb-4 border-b border-white/10">
-                  <p className="text-sm text-gray-400">Includes</p>
-                  <p className="font-semibold">{plan.minutesIncluded} minutes/mo</p>
-                  <p className="text-sm text-gray-400">
-                    {plan.concurrency} concurrent session{plan.concurrency > 1 ? 's' : ''}
-                  </p>
-                </div>
-                
-                <ul className="space-y-3">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2">
-                      <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <form action="/api/stripe/checkout" method="POST" className="mt-8">
-                <input type="hidden" name="plan" value={plan.id} />
-                <button
-                  type="submit"
-                  onClick={() => track('Plan_Selected', { planId: plan.id, planTitle: plan.title })}
-                  className={`w-full py-3 rounded-lg font-medium transition group ${
-                    plan.popular
-                      ? 'bg-primary text-white hover:opacity-90'
-                      : 'bg-white/10 text-white hover:bg-white/20'
+        {/* Plans and Estimator Grid */}
+        <div className="grid lg:grid-cols-3 gap-8 mb-16">
+          {/* Plans */}
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-bold mb-6">Choose Your Plan</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {plans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className={`relative bg-white/5 border rounded-xl p-6 cursor-pointer transition ${
+                    state.planId === plan.id ? 'border-primary shadow-lg shadow-primary/20' : 'border-white/10 hover:border-white/20'
                   }`}
+                  onClick={() => {
+                    setState(s => ({ ...s, planId: plan.id }));
+                    Analytics.planSelect(plan.id);
+                  }}
                 >
-                  {plan.popular ? 'Start Free Trial' : 'Get Started'}
-                  <Zap className="inline-block ml-2 w-4 h-4 group-hover:animate-pulse" />
-                </button>
-              </form>
+                  {plan.popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                      <Star className="w-3 h-3" />
+                      Most Popular
+                    </div>
+                  )}
 
-              {plan.popular && (
-                <p className="text-center text-sm text-green-400 mt-2">
-                  ✓ 14-day free trial included
-                </p>
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                    <div className="mb-2">
+                      <span className="text-2xl font-bold">${plan.displayPrice}</span>
+                      <span className="text-gray-400 text-sm">/month</span>
+                    </div>
+                    {plan.firstMonthDiscount && (
+                      <div className="text-sm text-green-400">
+                        First month: ${(plan.displayPrice * (1 - plan.firstMonthDiscount / 100)).toFixed(0)}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-400">
+                      {plan.baseMinutes.toLocaleString()} minutes included
+                    </p>
+                  </div>
+
+                  <ul className="space-y-2 text-sm">
+                    {plan.features.slice(0, 4).map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-xs">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {state.planId === plan.id && (
+                    <div className="absolute inset-0 border-2 border-primary rounded-xl pointer-events-none"></div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Usage Estimator */}
+          <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <h3 className="text-lg font-semibold mb-4">Usage Estimator</h3>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2" htmlFor="minutes">
+                Projected minutes / month: <strong>{state.estMinutes.toLocaleString()}</strong>
+              </label>
+              <input
+                id="minutes"
+                type="range"
+                min={0}
+                max={5000}
+                step={50}
+                value={state.estMinutes}
+                onChange={e => {
+                  const minutes = Number(e.target.value);
+                  setState(s => ({ ...s, estMinutes: minutes }));
+                  Analytics.usageEstimated(minutes, state.planId);
+                }}
+                className="w-full accent-primary"
+              />
+              <div className="flex justify-between text-xs text-gray-400 mt-1">
+                <span>0</span>
+                <span>5,000</span>
+              </div>
+            </div>
+
+            {/* Add-ons */}
+            <div className="mb-6">
+              <h4 className="font-medium mb-3">Add-ons</h4>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {addOns.map(addon => (
+                  <label key={addon.id} className="flex items-start gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={!!state.addOns[addon.id as AddOnId]}
+                      onChange={() => setState(s => ({
+                        ...s,
+                        addOns: { ...s.addOns, [addon.id]: !s.addOns[addon.id as AddOnId] }
+                      }))}
+                      className="mt-1 accent-primary"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{addon.name}</span>
+                        <span className="text-primary">${addon.displayPrice}/mo</span>
+                      </div>
+                      <div className="text-xs text-gray-400">{addon.description}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">Email (optional)</label>
+              <input
+                type="email"
+                placeholder="you@company.com"
+                className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-400 focus:border-primary focus:outline-none"
+                value={state.email ?? ''}
+                onChange={e => setState(s => ({ ...s, email: e.target.value }))}
+              />
+            </div>
+
+            {/* Summary */}
+            <div className="border-t border-white/10 pt-4">
+              <h4 className="font-semibold mb-3">Monthly Summary</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Base plan</span>
+                  <span>${totals.base.toFixed(2)}</span>
+                </div>
+                {totals.overagePacks > 0 && (
+                  <div className="flex justify-between">
+                    <span>Overage ({totals.overagePacks}×1k min)</span>
+                    <span>${totals.overage.toFixed(2)}</span>
+                  </div>
+                )}
+                {totals.addOns > 0 && (
+                  <div className="flex justify-between">
+                    <span>Add-ons</span>
+                    <span>${totals.addOns.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="border-t border-white/10 pt-2 flex justify-between font-bold">
+                  <span>Total</span>
+                  <span>${totals.total.toFixed(2)}/mo</span>
+                </div>
+                {totals.firstMonthTotal && (
+                  <div className="text-green-400 text-xs">
+                    First month: ${totals.firstMonthTotal.toFixed(2)}
+                  </div>
+                )}
+              </div>
+
+              <button
+                className="w-full mt-4 bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary/80 transition flex items-center justify-center gap-2"
+                onClick={async () => {
+                  Analytics.beginCheckout(totals.total, state.planId);
+                  await beginCheckout(lineItems, state.email);
+                }}
+              >
+                Start Checkout
+                <Zap className="w-4 h-4" />
+              </button>
+
+              {/* Optional retail helper (Shop Pay note) */}
+              {process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL && (
+                <div className="mt-4 rounded-lg border border-green-500/30 bg-green-500/10 p-3 text-xs">
+                  <strong>Shop Pay</strong> can lift conversion materially (studies cite up to ~50% vs guest).
+                  <a className="ml-2 underline" href={process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL!} target="_blank" rel="noreferrer">
+                    Continue in Shopify
+                  </a>
+                </div>
               )}
             </div>
-          ))}
+          </div>
         </div>
 
         {/* Social proof testimonials */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold text-center mb-8">What Our Customers Say</h3>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-black/40 border border-white/10 rounded-xl p-6">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
@@ -199,7 +341,7 @@ export default function PricingPage() {
               <p className="text-sm text-gray-400">Rodriguez Law Group</p>
             </div>
 
-            <div className="bg-black/40 border border-white/10 rounded-xl p-6">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
@@ -212,7 +354,7 @@ export default function PricingPage() {
               <p className="text-sm text-gray-400">TechFlow Inc.</p>
             </div>
 
-            <div className="bg-black/40 border border-white/10 rounded-xl p-6">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
@@ -227,43 +369,21 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Add-ons */}
-        <div>
-          <h3 className="text-2xl font-bold text-center mb-8">Flexible Add-ons</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            {ADDONS.map((addon, index) => (
-              <div
-                key={addon.id}
-                className={`bg-black/40 border rounded-xl p-6 hover:border-primary/50 transition-colors ${
-                  addon.popular ? 'border-primary/30' : 'border-white/10'
-                }`}
-              >
-                {addon.popular && (
-                  <div className="text-xs text-primary font-semibold mb-2">MOST POPULAR</div>
-                )}
-                <h4 className="font-semibold mb-2">{addon.title}</h4>
-                <p className="text-primary font-bold mb-2">{addon.price}</p>
-                <p className="text-sm text-gray-300">{addon.blurb}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* FAQ */}
         <div className="mt-16 max-w-3xl mx-auto">
           <h3 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h3>
           <div className="space-y-6">
-            <details className="bg-black/40 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 What happens when I exceed my minutes?
                 <span className="text-primary text-lg">+</span>
               </summary>
               <p className="mt-3 text-gray-300">
-                Additional minutes are billed at $0.40 per minute, or you can purchase minute packs for better rates.
+                Additional minutes are billed at $40 per 1,000-minute pack, automatically added to your next invoice.
                 Most customers find our included minutes more than sufficient.
               </p>
             </details>
-            <details className="bg-black/40 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 Can I change plans anytime?
                 <span className="text-primary text-lg">+</span>
@@ -273,7 +393,7 @@ export default function PricingPage() {
                 No long-term contracts or cancellation fees.
               </p>
             </details>
-            <details className="bg-black/40 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 Is there a free trial?
                 <span className="text-primary text-lg">+</span>
@@ -283,7 +403,7 @@ export default function PricingPage() {
                 All plans come with our 30-day money-back guarantee.
               </p>
             </details>
-            <details className="bg-black/40 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 How quickly will I see results?
                 <span className="text-primary text-lg">+</span>
@@ -303,23 +423,19 @@ export default function PricingPage() {
             Join <CustomerCount />+ businesses already using AI to grow faster
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => {
-                track('Final_CTA_Demo_Clicked');
-                window.location.href = '/demos';
-              }}
-              className="btn btn-primary text-lg px-8 py-4"
+            <a
+              href="/demos"
+              className="bg-white/10 text-white hover:bg-white/20 transition px-8 py-4 rounded-lg font-medium"
             >
               Try Live Demo First
-            </button>
+            </a>
             <button
               onClick={() => {
-                track('Final_CTA_Pricing_Clicked');
-                document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' });
+                document.querySelector('input[type="range"]')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="btn btn-secondary text-lg px-8 py-4"
+              className="bg-primary text-white hover:bg-primary/80 transition px-8 py-4 rounded-lg font-medium"
             >
-              Choose Your Plan
+              Calculate Your Cost
             </button>
           </div>
         </div>
