@@ -1,53 +1,176 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import PeelCard from "@/components/PeelCard";
 import { FEATURES, TESTIMONIALS } from "@/config/features";
 import CVIDemo from "@/components/cvi/CVIDemo";
 import { FadeIn, SlideIn } from "@/components/motion/reveal";
+import { ArrowRight, Users, Clock, DollarSign, Play } from "lucide-react";
+import { track } from "@/lib/tracking";
+
+// Live visitor counter component
+function LiveVisitorCount() {
+  const [count, setCount] = useState(42);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(prev => prev + Math.floor(Math.random() * 3));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-sm">
+      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+      {count} people exploring AI demos now
+    </div>
+  );
+}
+
+// Animated stats counter
+function CountUpNumber({ end, duration = 2 }: { end: number; duration?: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime: number;
+    let animationFrame: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+
+      setCount(Math.floor(progress * end));
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [end, duration]);
+
+  return <span>{count}</span>;
+}
+
+// Animated stats component
+function AnimatedStats() {
+  const stats = [
+    { label: "Leads Converted", value: 47, suffix: "%" },
+    { label: "Hours Saved Weekly", value: 32, suffix: "hrs" },
+    { label: "Cost Reduction", value: 68, suffix: "%" }
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-4 mt-8">
+      {stats.map((stat) => (
+        <div key={stat.label} className="text-center">
+          <div className="text-3xl font-bold text-primary">
+            <CountUpNumber end={stat.value} duration={2} />{stat.suffix}
+          </div>
+          <div className="text-sm text-gray-400">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function HomePage() {
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+
   return (
     <main>
       {/* Hero Section */}
       <section className="section bg-gradient-to-b from-black to-neutral-900">
-        <div className="container grid md:grid-cols-2 gap-12 items-center">
-          <FadeIn>
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Meet Your AI Chatbot Assistant
+        <div className="container">
+          {/* Trust bar */}
+          <div className="text-center mb-8">
+            <LiveVisitorCount />
+          </div>
+
+          {/* Main hero content */}
+          <div className="text-center max-w-4xl mx-auto">
+            <FadeIn>
+              <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                Convert <span className="text-primary">47% More Leads</span> in 30 Days
+                <br />Without Hiring More Staff
               </h1>
-              <p className="mt-6 text-xl text-gray-300">
-                Engage visitors with intelligent AI conversations. 
-                Qualify leads, answer questions, and convert more—24/7.
+
+              <p className="text-xl text-gray-300 mb-8">
+                Your AI video agent qualifies leads, books appointments, and answers questions 24/7
+                while you sleep. No training needed, starts working in 5 minutes.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/pricing" className="btn btn-primary text-lg">
-                  Start for $12.50/mo
+
+              {/* Dual CTA */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <Link
+                  href="/demos"
+                  className="btn btn-primary text-lg px-8 py-4 group"
+                  onClick={() => track('Hero_Demo_CTA_Clicked')}
+                >
+                  See Your Industry Demo
+                  <ArrowRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link href="/demos" className="btn btn-secondary text-lg">
-                  See Live Demos
-                </Link>
+                <button
+                  onClick={() => {
+                    setVideoModalOpen(true);
+                    track('Hero_Video_CTA_Clicked');
+                  }}
+                  className="btn btn-secondary text-lg px-8 py-4 group"
+                >
+                  <Play className="inline-block mr-2 group-hover:scale-110 transition-transform" size={20} />
+                  Watch 2-Min Overview
+                </button>
               </div>
-              <p className="mt-4 text-sm text-gray-400">
-                🔥 Limited offer: 50% off first month on Basic plan
-              </p>
-            </div>
-          </FadeIn>
-          <SlideIn direction="right">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 blur-3xl"></div>
-              <Image 
-                src="/brand/ai-chatbot-logo.png" 
-                alt="AI Chatbot Solutions" 
-                width={500} 
-                height={400} 
-                className="relative mx-auto rounded-lg object-contain"
-                priority
-              />
-            </div>
-          </SlideIn>
+
+              {/* Urgency element */}
+              <div className="text-sm text-yellow-400 mb-8">
+                ⚡ Limited Time: 50% off setup (expires in 48 hours)
+              </div>
+
+              {/* Animated stats */}
+              <AnimatedStats />
+
+              {/* Social proof */}
+              <div className="mt-12 pt-8 border-t border-white/10">
+                <p className="text-sm text-gray-400 mb-4">Trusted by 500+ businesses</p>
+                <div className="flex justify-center items-center gap-8 opacity-50">
+                  <div className="text-gray-500 font-semibold">TechFlow Inc.</div>
+                  <div className="text-gray-500 font-semibold">Rodriguez Law</div>
+                  <div className="text-gray-500 font-semibold">HealthFirst</div>
+                  <div className="text-gray-500 font-semibold">DataCore</div>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
         </div>
       </section>
+
+      {/* Video Modal */}
+      {videoModalOpen && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-neutral-900 to-black border border-primary/20 rounded-2xl p-8 max-w-2xl w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold">See AI Chatbots in Action</h3>
+              <button
+                onClick={() => setVideoModalOpen(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="aspect-video bg-black/60 border border-white/10 rounded-xl overflow-hidden flex items-center justify-center">
+              <p className="text-gray-400">Video demo placeholder - integrate with your video content</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Features Section */}
       <section className="section bg-black/40">

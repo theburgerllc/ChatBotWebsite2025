@@ -16,7 +16,9 @@
     "format:check": "prettier --check .",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "ci": "npm run typecheck && npm run build && npm run test:e2e"
+    "ci": "npm run typecheck && npm run build && npm run test:e2e",
+    "vercel-build": "next build",
+    "postbuild": "echo 'Build completed successfully'"
   },
   "dependencies": {
     "@daily-co/daily-js": "^0.84.0",

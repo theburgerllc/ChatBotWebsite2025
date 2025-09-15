@@ -15,7 +15,7 @@ export default function HealthcareDemoPage() {
           </div>
           
           <div className="aspect-video bg-black/60 border border-white/10 rounded-xl overflow-hidden">
-            <CVIDemo vertical="healthcare" autoStart />
+            <CVIDemo vertical="healthcare" autoStart requireQualification={false} />
           </div>
           
           <div className="mt-8 text-center">

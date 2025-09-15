@@ -15,7 +15,7 @@ export default function LegalDemoPage() {
           </div>
           
           <div className="aspect-video bg-black/60 border border-white/10 rounded-xl overflow-hidden">
-            <CVIDemo vertical="legal" autoStart />
+            <CVIDemo vertical="legal" autoStart requireQualification={false} />
           </div>
           
           <div className="mt-8 text-center">

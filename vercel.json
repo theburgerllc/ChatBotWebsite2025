@@ -1,24 +1,46 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
   "functions": {
-    "app/api/tavus/create-conversation/route.ts": { 
-      "maxDuration": 10
+    "app/api/tavus/create-conversation/route.ts": {
+      "maxDuration": 15,
+      "memory": 512
     },
-    "app/api/tavus/webhook/route.ts": { 
-      "maxDuration": 10
+    "app/api/tavus/webhook/route.ts": {
+      "maxDuration": 10,
+      "memory": 256
     },
-    "app/api/stripe/checkout/route.ts": { 
-      "maxDuration": 10
+    "app/api/tavus/webhook/conversation/route.ts": {
+      "maxDuration": 10,
+      "memory": 256
+    },
+    "app/api/tavus/webhook/video/route.ts": {
+      "maxDuration": 10,
+      "memory": 256
+    },
+    "app/api/stripe/checkout/route.ts": {
+      "maxDuration": 15,
+      "memory": 512
     },
     "app/api/stripe/webhook/route.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "memory": 256
     },
     "app/api/contact/route.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "memory": 256
     },
     "app/api/admin/events/route.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "memory": 256
+    },
+    "app/api/admin/webhook-events/route.ts": {
+      "maxDuration": 10,
+      "memory": 256
     }
   },
+  "regions": ["iad1"],
   "headers": [
     {
       "source": "/(.*)",

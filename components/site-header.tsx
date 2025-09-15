@@ -21,6 +21,7 @@ export default function SiteHeader() {
   const navLinks = [
     { href: "/pricing", label: "Pricing" },
     { href: "/demos", label: "Demos" },
+    { href: "/roi-calculator", label: "ROI Calculator" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" }
   ];

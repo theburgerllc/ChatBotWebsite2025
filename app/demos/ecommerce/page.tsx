@@ -15,7 +15,7 @@ export default function EcommerceDemoPage() {
           </div>
           
           <div className="aspect-video bg-black/60 border border-white/10 rounded-xl overflow-hidden">
-            <CVIDemo vertical="ecommerce" autoStart />
+            <CVIDemo vertical="ecommerce" autoStart requireQualification={false} />
           </div>
           
           <div className="mt-8 text-center">

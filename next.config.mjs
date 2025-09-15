@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
+  output: 'standalone',
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -12,6 +14,9 @@ const nextConfig = {
     // your project has type errors.
     // We're using this because types are already checked in CI/CD
     ignoreBuildErrors: false,
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   images: { 
     domains: ["tavus.daily.co", "cdn.tavus.io"],

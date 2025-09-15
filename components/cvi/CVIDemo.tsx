@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { Conversation } from "@/components/cvi/conversation";
+import { DemoQualifier } from "@/components/DemoQualifier";
 import { track } from "@/lib/tracking";
 import { Loader2 } from "lucide-react";
 
@@ -9,18 +10,23 @@ interface CVIDemoProps {
   context?: string;
   autoStart?: boolean;
   className?: string;
+  requireQualification?: boolean;
 }
 
-export default function CVIDemo({ 
-  vertical, 
-  context = "", 
+export default function CVIDemo({
+  vertical,
+  context = "",
   autoStart = false,
-  className = ""
+  className = "",
+  requireQualification = true
 }: CVIDemoProps) {
   const [url, setUrl] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showQualifier, setShowQualifier] = useState(requireQualification);
+  const [qualified, setQualified] = useState(!requireQualification);
+  const [leadData, setLeadData] = useState<any>({});
   
   const start = useCallback(async () => {
     setLoading(true);
@@ -66,13 +72,37 @@ export default function CVIDemo({
     }
   }, [autoStart, start]);
   
+  const handleQualified = (data: any) => {
+    setLeadData(data);
+    setQualified(true);
+    setShowQualifier(false);
+
+    // Auto-start the demo if qualification is complete
+    if (autoStart) {
+      start();
+    }
+  };
+
   const handleComplete = () => {
-    track("CVI_Demo_Completed", { 
-      vertical, 
-      conversationId 
+    track("CVI_Demo_Completed", {
+      vertical,
+      conversationId,
+      leadData
     });
   };
-  
+
+  // Show qualification flow first if required
+  if (showQualifier && !qualified) {
+    return (
+      <div className={`w-full h-full ${className}`}>
+        <DemoQualifier
+          vertical={vertical}
+          onQualified={handleQualified}
+        />
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 p-8">
