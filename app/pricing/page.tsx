@@ -203,7 +203,7 @@ export default function PricingPage() {
           </div>
 
           {/* Usage Estimator */}
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="bg-card border rounded-xl p-6">
             <h3 className="text-lg font-semibold mb-4">Usage Estimator</h3>
 
             <div className="mb-6">
@@ -328,7 +328,7 @@ export default function PricingPage() {
         <div className="mb-16">
           <h3 className="text-2xl font-bold text-center mb-8">What Our Customers Say</h3>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-card border rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
@@ -341,7 +341,7 @@ export default function PricingPage() {
               <p className="text-sm text-gray-400">Rodriguez Law Group</p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-card border rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
@@ -354,7 +354,7 @@ export default function PricingPage() {
               <p className="text-sm text-gray-400">TechFlow Inc.</p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-card border rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
@@ -373,7 +373,7 @@ export default function PricingPage() {
         <div className="mt-16 max-w-3xl mx-auto">
           <h3 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h3>
           <div className="space-y-6">
-            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-card border rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 What happens when I exceed my minutes?
                 <span className="text-primary text-lg">+</span>
@@ -383,7 +383,7 @@ export default function PricingPage() {
                 Most customers find our included minutes more than sufficient.
               </p>
             </details>
-            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-card border rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 Can I change plans anytime?
                 <span className="text-primary text-lg">+</span>
@@ -393,7 +393,7 @@ export default function PricingPage() {
                 No long-term contracts or cancellation fees.
               </p>
             </details>
-            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-card border rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 Is there a free trial?
                 <span className="text-primary text-lg">+</span>
@@ -403,7 +403,7 @@ export default function PricingPage() {
                 All plans come with our 30-day money-back guarantee.
               </p>
             </details>
-            <details className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-primary/30 transition-colors">
+            <details className="bg-card border rounded-xl p-6 hover:border-primary/30 transition-colors">
               <summary className="font-semibold cursor-pointer flex items-center justify-between">
                 How quickly will I see results?
                 <span className="text-primary text-lg">+</span>

@@ -62,21 +62,21 @@ export default function RetailPage() {
 
         {/* Benefits Section */}
         <section className="mt-20 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="bg-card border rounded-xl p-6">
             <h3 className="text-xl font-semibold mb-3">Smart Product Discovery</h3>
             <p className="text-gray-300">
               Help customers find exactly what they need with intelligent questioning
               and personalized product recommendations based on their preferences.
             </p>
           </div>
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="bg-card border rounded-xl p-6">
             <h3 className="text-xl font-semibold mb-3">Instant Support</h3>
             <p className="text-gray-300">
               Answer sizing questions, check inventory, explain features, and provide
               real-time support when customers need it most.
             </p>
           </div>
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="bg-card border rounded-xl p-6">
             <h3 className="text-xl font-semibold mb-3">Cart Recovery</h3>
             <p className="text-gray-300">
               Proactively engage customers who abandon carts with personalized offers,
@@ -86,7 +86,7 @@ export default function RetailPage() {
         </section>
 
         {/* E-commerce specific features */}
-        <section className="mt-20 bg-white/5 border border-white/10 rounded-2xl p-8 max-w-4xl mx-auto">
+        <section className="mt-20 bg-card border rounded-2xl p-8 max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-8">Built for E-commerce</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-3">
@@ -159,13 +159,13 @@ export default function RetailPage() {
         </section>
 
         {/* Self-guided demo anchor for smooth scroll */}
-        <section id="self-demo" className="mt-20 bg-white/5 border border-white/10 rounded-2xl p-8 max-w-4xl mx-auto">
+        <section id="self-demo" className="mt-20 bg-card border rounded-2xl p-8 max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4">Experience Retail AI</h2>
           <p className="text-gray-300 text-center mb-8">
             Explore how the agent handles sizing questions, availability checks, and product recommendations.
           </p>
 
-          <div className="bg-black/40 border border-white/10 rounded-xl p-6 text-center">
+          <div className="bg-muted border rounded-xl p-6 text-center">
             <p className="text-gray-400 mb-4">Shopping assistant demo loading...</p>
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
           </div>
@@ -181,7 +181,7 @@ export default function RetailPage() {
               </a>
               <a
                 href="/demos"
-                className="btn bg-white/10 text-white hover:bg-white/20 transition px-6 py-3 rounded-lg"
+                className="btn bg-secondary text-secondary-foreground hover:bg-secondary/80 transition px-6 py-3 rounded-lg"
               >
                 Try Live Demo
               </a>
@@ -193,7 +193,7 @@ export default function RetailPage() {
         <section className="mt-20 text-center">
           <h3 className="text-2xl font-bold mb-8">Trusted by E-commerce Leaders</h3>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-card border rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
@@ -208,7 +208,7 @@ export default function RetailPage() {
               <p className="text-sm text-gray-400">TechFlow E-commerce</p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-card border rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
@@ -223,7 +223,7 @@ export default function RetailPage() {
               <p className="text-sm text-gray-400">Urban Style Co.</p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-card border rounded-xl p-6">
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">

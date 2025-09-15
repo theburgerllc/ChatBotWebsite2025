@@ -231,11 +231,11 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((testimonial, i) => (
               <FadeIn key={i} delay={i * 0.1}>
-                <div className="bg-black/40 border border-white/10 rounded-xl p-6">
-                  <p className="text-gray-300 italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
+                <div className="bg-card text-card-foreground rounded-xl border p-6">
+                  <p className="text-muted-foreground italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
                   <div>
                     <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       {testimonial.role}, {testimonial.company}
                     </p>
                   </div>

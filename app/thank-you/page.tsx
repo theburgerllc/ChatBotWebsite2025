@@ -39,7 +39,7 @@ function ThankYouContent() {
           </p>
 
           {/* What happens next */}
-          <div className="bg-white/5 border border-white/10 rounded-xl p-8 mb-8">
+          <div className="bg-card border rounded-xl p-8 mb-8">
             <h2 className="text-2xl font-bold mb-6">What happens next?</h2>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -76,7 +76,7 @@ function ThankYouContent() {
           </div>
 
           {/* Quick start actions */}
-          <div className="bg-white/5 border border-white/10 rounded-xl p-8 mb-8">
+          <div className="bg-card border rounded-xl p-8 mb-8">
             <h2 className="text-2xl font-bold mb-6">Get Started Right Away</h2>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -90,7 +90,7 @@ function ThankYouContent() {
 
               <a
                 href="mailto:support@aichatbotsolutions.com"
-                className="bg-white/10 hover:bg-white/20 transition px-6 py-4 rounded-lg font-medium flex items-center justify-center gap-2"
+                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground transition px-6 py-4 rounded-lg font-medium flex items-center justify-center gap-2"
               >
                 Contact Support
                 <ArrowRight className="w-4 h-4" />
@@ -126,7 +126,7 @@ function ThankYouContent() {
 
           {/* Order details */}
           {sessionId && (
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6 mt-8">
+            <div className="bg-card border rounded-xl p-6 mt-8">
               <h3 className="text-lg font-semibold mb-3">Order Details</h3>
               <p className="text-gray-400 text-sm">
                 Order ID: {sessionId}

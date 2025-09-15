@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 function Promo() {
   return (
-    <div className="banner">
+    <div className="banner relative z-40">
       🔥 Limited Time: 50% off Basic ($12.50/mo) • Starter $174 (save $25) • Growth $549 (save $50)
     </div>
   );
