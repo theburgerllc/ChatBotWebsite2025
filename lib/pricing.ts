@@ -171,7 +171,13 @@ export interface Totals {
 
 export function envPriceId(envKey: string): string {
   const val = process.env[envKey];
-  if (!val) throw new Error(`Missing Stripe price id for ${envKey}`);
+  if (!val) {
+    // During build time, return a placeholder to prevent build errors
+    if (typeof window === 'undefined') {
+      return `placeholder_${envKey.toLowerCase()}`;
+    }
+    throw new Error(`Missing Stripe price id for ${envKey}`);
+  }
   return val;
 }
 
