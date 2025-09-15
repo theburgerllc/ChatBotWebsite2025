@@ -1,64 +1,54 @@
-/* app/globals.css — Tailwind v4 + shadcn theme mapping */
+/* app/globals.css — Tailwind v4 + shadcn token mapping + dark gradient */
+
 @import "tailwindcss";
 
-/* 1) Base HSL tokens (shadcn convention) */
+/* ----- Base HSL design tokens (shadcn-style) ----- */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    /* Charcoal dark surface + bright azure accents (AA-compliant pairings) */
+    --background: 220 18% 8%;     /* #0e141b-ish */
+    --foreground: 210 20% 96%;    /* near-white for text on dark */
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --card: 220 14% 12%;
+    --card-foreground: 210 18% 96%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --popover: 220 14% 12%;
+    --popover-foreground: 210 18% 96%;
 
+    /* Primary azure (hero numbers, CTAs) */
+    --primary: 210 100% 56%;      /* vivid azure (~#1e90ff/#2b8cff range) */
+    --primary-foreground: 210 100% 10%;
+
+    /* Secondary surfaces */
+    --secondary: 220 12% 16%;
+    --secondary-foreground: 210 20% 95%;
+
+    /* Muted text/strips */
+    --muted: 220 12% 16%;
+    --muted-foreground: 215 12% 70%;
+
+    /* Accent (used sparingly for chips) */
+    --accent: 210 100% 60%;
+    --accent-foreground: 210 100% 10%;
+
+    /* Destructive */
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    /* Borders / inputs / ring */
+    --border: 220 10% 22%;
+    --input: 220 10% 22%;
+    --ring: 210 100% 56%;
 
-    --radius: 0.75rem; /* 12px */
+    --radius: 1rem; /* 16px */
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 210 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 0 86% 97%;
-
-    --border: 240 3.7% 24%;
-    --input: 240 3.7% 24%;
-    --ring: 210 100% 50%;
+    /* (Optional) keep same palette; override here if you support light mode */
   }
 }
 
-/* 2) Tailwind v4 token mapping with @theme inline → enables bg-card, text-muted-foreground, border-border, etc. */
+/* ----- Map tokens to Tailwind v4 theme via @theme inline ----- */
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -87,19 +77,39 @@
   --radius: var(--radius);
 }
 
-/* 3) Global base styles so the page isn't pure black/white and borders stop appearing white */
+/* ----- Global base + typography ----- */
 @layer base {
-  * {
-    @apply border-border;
-  }
-  html, body {
-    height: 100%;
-  }
+  * { @apply border-border; }
+  html, body { height: 100%; }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Soft vignette background — radial over subtle linear */
+    background-image:
+      radial-gradient(1200px 600px at 50% -10%, hsl(210 100% 20% / 0.25), transparent 70%),
+      linear-gradient(180deg, hsl(220 18% 10%) 0%, hsl(220 18% 8%) 60%, hsl(220 18% 7%) 100%);
+    background-attachment: fixed;
+  }
+
+  a { @apply text-primary; }
+  button { @apply focus-visible:outline-4; }
+}
+
+/* ----- Utilities (optional helpers) ----- */
+@layer utilities {
+  .btn-primary {
+    @apply px-5 py-3 rounded-xl bg-primary text-primary-foreground
+           hover:opacity-95 transition shadow-sm;
+  }
+  .btn-secondary {
+    @apply px-5 py-3 rounded-xl border border-border bg-secondary
+           text-secondary-foreground hover:bg-secondary/90 transition;
+  }
+  .promo-bar {
+    /* Warm amber banner like the screenshot */
+    background: linear-gradient(180deg, #0ea5e9 0%, #0ea5e9 0%), #0ea5e9;
   }
 }
 

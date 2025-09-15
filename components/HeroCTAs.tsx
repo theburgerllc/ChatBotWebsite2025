@@ -63,7 +63,7 @@ export function HeroCTAs({ vertical }: { vertical: Vertical }) {
     <div className="mt-6 flex flex-col sm:flex-row gap-3">
       <button
         onClick={onStartSelfDemo}
-        className="px-5 py-3 rounded-xl border border-white/20 hover:bg-white hover:text-black transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="btn-secondary"
       >
         Start 2-min self-guided demo
       </button>
@@ -71,14 +71,14 @@ export function HeroCTAs({ vertical }: { vertical: Vertical }) {
       <a
         href="/pricing"
         onClick={onSeePricing}
-        className="px-5 py-3 rounded-xl border border-white/20 hover:bg-white hover:text-black transition text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="btn-secondary text-center"
       >
         See pricing
       </a>
 
       <button
         onClick={onStartLiveDemo}
-        className="px-5 py-3 rounded-xl border border-primary bg-primary/10 hover:bg-primary hover:text-white transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="btn-primary"
         aria-label="Start live video demo"
       >
         Start live video demo

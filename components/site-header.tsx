@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 function Promo() {
   return (
-    <div className="banner relative z-40">
+    <div className="promo-bar relative z-40 text-white text-center py-2 text-sm font-medium">
       🔥 Limited Time: 50% off Basic ($12.50/mo) • Starter $174 (save $25) • Growth $549 (save $50)
     </div>
   );
@@ -29,9 +29,9 @@ export default function SiteHeader() {
   const isActive = (href: string) => pathname.startsWith(href);
   
   return (
-    <header className="fixed top-0 inset-x-0 z-50">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur">
       <Promo />
-      <div className="bg-black/60 backdrop-blur border-b border-white/10">
+      <div className="border-b border-border">
         <div className="container flex items-center justify-between py-3">
           <Link href="/" className="flex items-center gap-2">
             <Image 
@@ -60,7 +60,7 @@ export default function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <Link href="/pricing" className="btn btn-primary text-xs py-2 px-4">
+            <Link href="/pricing" className="btn-primary text-xs">
               Get Started
             </Link>
           </nav>
@@ -77,7 +77,7 @@ export default function SiteHeader() {
         
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur">
+          <nav className="md:hidden border-t border-border bg-background/95 backdrop-blur">
             <div className="container py-4 space-y-3">
               {navLinks.map(link => (
                 <Link
@@ -92,9 +92,9 @@ export default function SiteHeader() {
                   {link.label}
                 </Link>
               ))}
-              <Link 
-                href="/pricing" 
-                className="btn btn-primary w-full text-sm"
+              <Link
+                href="/pricing"
+                className="btn-primary w-full text-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Get Started

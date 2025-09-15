@@ -62,7 +62,7 @@ export default function RootLayout({
       </head>
       <body>
         <SiteHeader />
-        <div className="pt-24 min-h-screen">{children}</div>
+        <div className="min-h-screen">{children}</div>
         <SiteFooter />
         <VideoChatWidget />
         <ExitIntentPopup />
