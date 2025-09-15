@@ -5,12 +5,15 @@ module.exports = {
     "./components/**/*.{ts,tsx}",
     "./lib/**/*.{ts,tsx}"
   ],
-  theme: { 
-    extend: { 
-      colors: { 
+  theme: {
+    extend: {
+      colors: {
         primary: "#08f",
-        background: "#0a0a0a", 
+        background: "#0a0a0a",
         foreground: "#eaeaea"
+      },
+      borderRadius: {
+        'md': '0.375rem',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

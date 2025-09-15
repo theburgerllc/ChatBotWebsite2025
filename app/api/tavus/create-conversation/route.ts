@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     } = await req.json();
     
     // Rate limiting with enhanced feedback
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || req.ip || "unknown";
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
     const rateLimitResult = checkRateLimit(ip, true);
     
     if (!rateLimitResult.allowed) {

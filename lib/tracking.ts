@@ -4,8 +4,8 @@ import { POSTHOG_EVENTS } from '@/lib/posthog';
 
 declare global {
   interface Window {
-    dataLayer?: any;
-    gtag?: any;
+    dataLayer?: any[];
+    gtag?: (...args: any[]) => void;
   }
 }
 
