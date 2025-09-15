@@ -1,16 +1,22 @@
-# ✅ Vercel Deployment Checklist
+# 🚀 Vercel Deployment Checklist - AI Chatbot Solutions
 
 ## Pre-Deployment Setup
 
-### 1. Environment Variables Setup
-Copy these variables to your Vercel project settings:
+### 1. Vercel Project Configuration
+- ✅ **vercel.json** configured with API route timeouts and memory limits
+- ✅ **next.config.mjs** optimized with security headers and CSP
+- ✅ **package.json** upgraded to Next.js 15, React 19, Tailwind v4
 
+### 2. Environment Variables Required
+
+#### Essential Variables (Required for Basic Functionality)
 ```bash
-# Required for core functionality
-TAVUS_API_KEY=your_actual_api_key
-NEXT_PUBLIC_BASE_URL=https://your-domain.vercel.app
+# Core Application
+NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
+NODE_ENV=production
 
-# Pre-configured Tavus IDs (ready to use)
+# Tavus AI Video (Keep Existing Values)
+TAVUS_API_KEY=your_tavus_api_key_here
 TAVUS_PERSONA_ID_HEALTHCARE=pe653bcff599
 TAVUS_REPLICA_ID_HEALTHCARE=r6ca16dbe104
 TAVUS_PERSONA_ID_LEGAL=p11133015d34
@@ -20,163 +26,135 @@ TAVUS_REPLICA_ID_ECOMMERCE=r880666f8c89
 TAVUS_PERSONA_ID_GENERAL=pd8b36dccdc2
 TAVUS_REPLICA_ID_GENERAL=r3a47ce45e68
 
-# Optional but recommended
-STRIPE_PUBLISHABLE_KEY=pk_live_...
-STRIPE_SECRET_KEY=sk_live_...
-SENDGRID_API_KEY=SG....
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
-NEXT_PUBLIC_POSTHOG_KEY=phc_...
+# Stripe Payment Processing
+STRIPE_SECRET_KEY=sk_live_your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=whsec_your_stripe_webhook_secret
 ```
 
-## Quick Deploy Steps
-
-### Option 1: One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/theburgerllc/ChatBotWebsite2025)
-
-### Option 2: CLI Deploy
+#### Stripe Price IDs (Required for New Pricing System)
 ```bash
-npm install -g vercel
-vercel login
-vercel --prod
+# Plan Price IDs
+STRIPE_PRICE_PLAN_BASIC=price_your_basic_plan_price_id
+STRIPE_PRICE_PLAN_STARTER=price_your_starter_plan_price_id
+STRIPE_PRICE_PLAN_GROWTH=price_your_growth_plan_price_id
+STRIPE_PRICE_PLAN_SCALE=price_your_scale_plan_price_id
+
+# Add-on Price IDs
+STRIPE_PRICE_ADDON_MINUTES_1K=price_your_minutes_addon_price_id
+STRIPE_PRICE_ADDON_MULTILINGUAL=price_your_multilingual_addon_price_id
+STRIPE_PRICE_ADDON_IVR=price_your_ivr_addon_price_id
+STRIPE_PRICE_ADDON_SLA=price_your_sla_addon_price_id
+STRIPE_PRICE_ADDON_CONCURRENCY=price_your_concurrency_addon_price_id
+STRIPE_PRICE_ADDON_REPLICA=price_your_replica_addon_price_id
+STRIPE_PRICE_ADDON_HIPAA=price_your_hipaa_addon_price_id
 ```
 
-### Option 3: GitHub Integration
-1. Connect your GitHub repository to Vercel
-2. Push to main branch
-3. Automatic deployment triggered
+#### Optional Variables (Analytics & Features)
+```bash
+# Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_POSTHOG_KEY=phc_your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
+
+# Email Services
+SENDGRID_API_KEY=SG.your_sendgrid_api_key
+
+# Optional Features
+NEXT_PUBLIC_SHOPIFY_STORE_URL=https://your-shop.myshopify.com
+BASIC_AUTH_USER=admin
+BASIC_AUTH_PASSWORD=your_secure_admin_password
+```
+
+## Deployment Steps
+
+### Step 1: Deploy to Vercel
+```bash
+# If using Vercel CLI
+npx vercel --prod
+
+# Or push to main branch if auto-deployment is configured
+git push origin main
+```
+
+### Step 2: Configure Environment Variables in Vercel Dashboard
+1. Go to [vercel.com/dashboard](https://vercel.com/dashboard)
+2. Select your project
+3. Navigate to **Settings → Environment Variables**
+4. Add all required variables listed above
+5. Set environment to **Production**
+
+### Step 3: Set Up Stripe Webhook
+1. Go to [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks)
+2. Click **Add endpoint**
+3. Set endpoint URL: `https://your-domain.vercel.app/api/webhooks/stripe`
+4. Select events to listen for:
+   - `checkout.session.completed`
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+5. Copy the webhook secret and add to Vercel env vars as `STRIPE_WEBHOOK_SECRET`
 
 ## Post-Deployment Testing
 
-### ✅ Core Features Test
-- [ ] Homepage loads with conversion-focused hero
-- [ ] Live visitor counter animates
-- [ ] Animated statistics display (47%, 32 hrs, 68%)
-- [ ] Dual CTA buttons work (Demo + Video)
-- [ ] Exit intent popup triggers on mouse leave
-- [ ] ROI Calculator accessible from navigation
-- [ ] ROI Calculator performs calculations correctly
-- [ ] Pricing page shows psychological triggers
-- [ ] Video chat widget appears and functions
+### ✅ Core Functionality Checks
+- [ ] **Homepage loads** with animated stats and hero CTAs
+- [ ] **Vertical pages work**: `/law`, `/health`, `/retail`
+- [ ] **Pricing calculator** functions with real-time totals
+- [ ] **Legal pages accessible**: `/accessibility`, `/legal/privacy`, `/legal/terms`, `/legal/baa`
 
-### ✅ Demo Flow Test
-- [ ] Legal demo loads without qualification: `/demos/legal`
-- [ ] Healthcare demo loads without qualification: `/demos/healthcare`
-- [ ] Ecommerce demo loads without qualification: `/demos/ecommerce`
-- [ ] Main homepage demo shows qualification flow
-- [ ] Qualification flow captures leads properly
+### ✅ Tavus Integration (Unchanged)
+- [ ] **Existing demos work**: `/demos/legal`, `/demos/healthcare`, `/demos/ecommerce`
+- [ ] **CVI Demo component** loads and functions normally
+- [ ] **Tavus API calls** succeed (check network tab)
+- [ ] **Video conversations** connect properly
 
-### ✅ Conversion Features Test
-- [ ] Exit intent popup appears on mouse leave
-- [ ] ROI calculator email capture works
-- [ ] Demo qualification form submits
-- [ ] Analytics events fire (check browser console)
-- [ ] Pricing page CTAs track properly
+### ✅ New Features
+- [ ] **Usage estimator** updates totals dynamically
+- [ ] **Hero CTAs** track analytics events
+- [ ] **Checkout flow** redirects to Stripe properly
+- [ ] **Thank you page** displays after successful payment
+- [ ] **Analytics tracking** fires (check browser dev tools)
 
-### ✅ Analytics & Tracking Test
-- [ ] PostHog events tracking (if configured)
-- [ ] Google Analytics events (if configured)
-- [ ] Conversion journey stored in localStorage
-- [ ] Attribution data captured correctly
+### ✅ Security & Performance
+- [ ] **Lighthouse score** shows good performance/accessibility
+- [ ] **CSP headers** don't block Tavus/Daily video
+- [ ] **WCAG compliance** - keyboard navigation works
+- [ ] **Mobile responsive** on all new pages
 
-## Performance Verification
+## Monitoring & Maintenance
 
-### ✅ Speed & SEO
-- [ ] Lighthouse Performance Score > 90
-- [ ] Core Web Vitals in green
-- [ ] Meta tags optimized for conversion
-- [ ] Open Graph tags present
-- [ ] Twitter cards configured
-
-### ✅ Mobile Optimization
-- [ ] Responsive design works on mobile
-- [ ] Exit intent works on mobile
-- [ ] Demo qualification flows are mobile-friendly
-- [ ] ROI calculator responsive
-
-## Common Issues & Solutions
-
-### ❌ Tavus Demo Not Loading
-**Problem**: Video demo shows "Start Video Demo" but doesn't load
-**Solution**:
-1. Verify `TAVUS_API_KEY` is set correctly in Vercel
-2. Check API key has correct permissions in Tavus dashboard
-3. Ensure persona/replica IDs are valid
-
-### ❌ Exit Intent Not Triggering
-**Problem**: Exit popup doesn't appear on mouse leave
-**Solution**:
-1. Test on desktop (mobile uses different triggers)
-2. Clear localStorage to reset popup state
-3. Check browser console for JavaScript errors
-
-### ❌ ROI Calculator Errors
-**Problem**: Calculator doesn't compute results
-**Solution**:
-1. Check for JavaScript errors in console
-2. Verify all form inputs are valid numbers
-3. Test with different input values
-
-### ❌ Analytics Not Tracking
-**Problem**: Events not showing in analytics
-**Solution**:
-1. Verify PostHog/GA4 keys are correct
-2. Check browser console for tracking errors
-3. Disable ad blockers during testing
-
-## Success Metrics to Monitor
-
-### Immediate (First 24 hours)
-- [ ] Zero 500 errors in Vercel logs
-- [ ] All pages loading under 3 seconds
-- [ ] Demo start rate > baseline
-- [ ] Email capture events firing
-
-### Short-term (First week)
-- [ ] Lead qualification completion rate
-- [ ] Exit intent conversion rate
-- [ ] ROI calculator usage
-- [ ] Overall bounce rate improvement
-
-### Long-term (First month)
-- [ ] 47% lead conversion improvement target
-- [ ] Increased time on site
-- [ ] Higher demo-to-pricing page flow
-- [ ] Reduced customer acquisition cost
-
-## Optimization Recommendations
-
-### A/B Testing Opportunities
-1. **Hero headline variations**
-2. **Exit intent offer messaging**
-3. **ROI calculator input fields**
-4. **Pricing page psychological triggers**
+### Analytics Setup
+1. **Google Analytics 4**: Verify ecommerce events are firing
+2. **PostHog**: Check custom event tracking for demo interactions
+3. **Stripe Dashboard**: Monitor successful subscriptions
 
 ### Performance Monitoring
-1. Set up Vercel Analytics
-2. Configure error tracking (Sentry recommended)
-3. Monitor Core Web Vitals
-4. Track conversion funnel metrics
+- Monitor Vercel function execution times
+- Check Core Web Vitals in Google Search Console
+- Monitor conversion rates from new vertical pages
 
-## Support & Maintenance
+## Troubleshooting
 
-### Regular Updates
-- [ ] Monitor Tavus API status
-- [ ] Update pricing based on A/B tests
-- [ ] Refresh testimonials and social proof
-- [ ] Update urgency timers and offers
+### Common Issues
+1. **Build fails**: Check package.json dependencies for Next 15/React 19 compatibility
+2. **Tavus videos don't load**: Verify CSP frame-src includes Daily domains
+3. **Stripe checkout fails**: Check environment variables and webhook configuration
+4. **Analytics not tracking**: Verify GA4/PostHog keys are set correctly
 
-### Security
-- [ ] Rotate API keys quarterly
-- [ ] Monitor failed login attempts
-- [ ] Review CORS policies
-- [ ] Update dependencies monthly
+### Stack Verification
+After deployment, check footer shows: **Next 15 / React 19 / Tailwind v4**
+
+## Success Criteria
+- ✅ All existing Tavus functionality preserved
+- ✅ New vertical landing pages drive conversions
+- ✅ Enhanced pricing system with usage calculator
+- ✅ WCAG 2.2 AA compliance features working
+- ✅ Analytics tracking complete funnel
+- ✅ Legal compliance pages accessible
+- ✅ Security headers protect against common vulnerabilities
 
 ---
 
-**Ready to Deploy?** ✅ Your conversion-optimized AI Chatbot Solutions website is ready for production!
-
-🎯 **Expected Results**: 47% increase in lead conversions within 30 days of deployment.
-
-📊 **Track Everything**: All conversion events are instrumented for detailed funnel analysis.
-
-🚀 **Deploy Now**: Use any of the deployment options above to go live!
+**🎉 Deployment Complete!** Your AI Chatbot Solutions platform is now optimized for revenue generation while maintaining all existing functionality.
